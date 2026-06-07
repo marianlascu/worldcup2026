@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Sport Predictor - ' + ${selectedTournament.name}">
+        Sport Predictor - Tournament
+    </title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        ${'Tournament - ' + selectedTournament.name},
+        'tournaments',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card tournament-shell">
+
+            <div class="tournament-freeze">
+
+                <div class="tournament-title-box">
+                    <div class="muted">Selected tournament</div>
+                    <h2 th:text="${selectedTournament.name}">
+                        FIFA World Cup 2026
+                    </h2>
+                </div>
+
+                <div th:replace="~{fragments/tournament-tabs :: tournamentTabs(${activeTab})}"></div>
+
+            </div>
+
+            <div class="tournament-body">
+
+                <div th:if="${activeTab == 'overview'}"
+                     th:replace="~{tournaments/tournament-overview :: content}">
+                </div>
+
+                <div th:if="${activeTab == 'matches'}"
+                     th:replace="~{tournaments/tournament-matches :: content}">
+                </div>
+
+                <div th:if="${activeTab == 'tables'}"
+                     th:replace="~{tournaments/tournament-tables :: content}">
+                </div>
+
+                <div th:if="${activeTab == 'teams'}"
+                     th:replace="~{tournaments/tournament-teams :: content}">
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

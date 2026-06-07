@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sport Predictor - Tournaments</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        'Tournaments',
+        'tournaments',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+
+            <div th:if="${selectedTournamentId != null}" class="selected-box">
+
+                <div>
+                    Current tournament:
+                    <strong th:text="${selectedTournamentName}">World Cup 2026</strong>
+                </div>
+
+                <div class="selected-actions">
+
+                    <a th:href="@{/tournaments/{id}/overview(id=${selectedTournamentId})}"
+                       class="small-btn">
+                        Open tournament
+                    </a>
+
+                    <form method="post" action="/tournaments/clear">
+                        <button type="submit" class="small-btn danger">
+                            Clear selection
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="quick-grid">
+
+                <form th:each="t : ${tournaments}"
+                      method="post"
+                      action="/tournaments/select"
+                      class="quick-card-form">
+
+                    <input type="hidden" name="tournamentId" th:value="${t.id}">
+
+                    <button type="submit"
+                            th:class="${selectedTournamentId != null and selectedTournamentId == t.id} ? 'quick-card selected' : 'quick-card'">
+
+                        <strong th:text="${t.name}">World Cup 2026</strong>
+
+                        <span th:text="${t.season}">2026</span>
+
+                        <span th:text="${t.code}">WC2026</span>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

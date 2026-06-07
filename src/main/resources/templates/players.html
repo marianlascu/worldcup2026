@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Cup 2026 - Players</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        'Players',
+        'players',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+            <h2>Players CRUD</h2>
+
+            <p>
+                Aici vom gestiona participanții: add, update, delete.
+            </p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>marian</td>
+                    <td>Marian</td>
+                    <td>PLAYER</td>
+                    <td>Edit | Delete</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

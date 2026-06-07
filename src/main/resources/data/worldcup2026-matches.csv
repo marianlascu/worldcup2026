@@ -1,0 +1,105 @@
+matchNo;date;time;stage;groupName;teamA;teamB;venueCity;venueCountry
+1;2026-06-11;22:00;GROUP;A;Mexico;South Africa;Mexico City;Mexico
+2;2026-06-12;05:00;GROUP;A;South Korea;Czech Republic;Zapopan;Mexico
+3;2026-06-12;22:00;GROUP;B;Canada;Bosnia & Herzegovina;Toronto;Canada
+4;2026-06-13;04:00;GROUP;D;USA;Paraguay;Los Angeles;USA
+5;2026-06-13;22:00;GROUP;B;Qatar;Switzerland;Santa Clara;USA
+6;2026-06-14;01:00;GROUP;C;Brazil;Morocco;New Jersey;USA
+7;2026-06-14;04:00;GROUP;C;Haiti;Scotland;Foxborough;USA
+8;2026-06-14;07:00;GROUP;D;Australia;Turkey;Vancouver;Canada
+9;2026-06-14;20:00;GROUP;E;Germany;Curacao;Houston;USA
+10;2026-06-14;23:00;GROUP;F;Netherlands;Japan;Arlington;USA
+11;2026-06-15;02:00;GROUP;E;Ivory Coast;Ecuador;Philadelphia;USA
+12;2026-06-15;05:00;GROUP;F;Sweden;Tunisia;Guadalupe;Mexico
+13;2026-06-15;19:00;GROUP;H;Spain;Cape Verde;Atlanta;USA
+14;2026-06-15;22:00;GROUP;G;Belgium;Egypt;Seattle;USA
+15;2026-06-16;01:00;GROUP;H;Saudi Arabia;Uruguay;Miami;USA
+16;2026-06-16;04:00;GROUP;G;Iran;New Zealand;Los Angeles;USA
+17;2026-06-16;22:00;GROUP;I;France;Senegal;New Jersey;USA
+18;2026-06-17;01:00;GROUP;I;Iraq;Norway;Foxborough;USA
+19;2026-06-17;04:00;GROUP;J;Argentina;Algeria;Kansas City;USA
+20;2026-06-17;07:00;GROUP;J;Austria;Jordan;Santa Clara;USA
+21;2026-06-17;20:00;GROUP;K;Portugal;DR Congo;Houston;USA
+22;2026-06-17;23:00;GROUP;L;England;Croatia;Arlington;USA
+23;2026-06-18;02:00;GROUP;L;Ghana;Panama;Toronto;Canada
+24;2026-06-18;05:00;GROUP;K;Uzbekistan;Colombia;Mexico City;Mexico
+25;2026-06-18;19:00;GROUP;A;Czech Republic;South Africa;Atlanta;USA
+26;2026-06-18;22:00;GROUP;B;Switzerland;Bosnia & Herzegovina;Los Angeles;USA
+27;2026-06-19;01:00;GROUP;B;Canada;Qatar;Vancouver;Canada
+28;2026-06-19;04:00;GROUP;A;Mexico;South Korea;Zapopan;Mexico
+29;2026-06-19;22:00;GROUP;D;USA;Australia;Seattle;USA
+30;2026-06-20;01:00;GROUP;C;Scotland;Morocco;Foxborough;USA
+31;2026-06-20;03:30;GROUP;C;Brazil;Haiti;Philadelphia;USA
+32;2026-06-20;06:00;GROUP;D;Turkey;Paraguay;Santa Clara;USA
+33;2026-06-20;20:00;GROUP;F;Netherlands;Sweden;Houston;USA
+34;2026-06-20;23:00;GROUP;E;Germany;Ivory Coast;Toronto;Canada
+35;2026-06-21;03:00;GROUP;E;Ecuador;Curacao;Kansas City;USA
+36;2026-06-21;07:00;GROUP;F;Tunisia;Japan;Guadalupe;Mexico
+37;2026-06-21;19:00;GROUP;H;Spain;Saudi Arabia;Atlanta;USA
+38;2026-06-21;22:00;GROUP;G;Belgium;Iran;Los Angeles;USA
+39;2026-06-22;01:00;GROUP;H;Uruguay;Cape Verde;Miami;USA
+40;2026-06-22;04:00;GROUP;G;New Zealand;Egypt;Vancouver;Canada
+41;2026-06-22;20:00;GROUP;J;Argentina;Austria;Arlington;USA
+42;2026-06-23;00:00;GROUP;I;France;Iraq;Philadelphia;USA
+43;2026-06-23;03:00;GROUP;I;Norway;Senegal;Toronto;Canada
+44;2026-06-23;06:00;GROUP;J;Jordan;Algeria;Santa Clara;USA
+45;2026-06-23;20:00;GROUP;K;Portugal;Uzbekistan;Houston;USA
+46;2026-06-23;23:00;GROUP;L;England;Ghana;Foxborough;USA
+47;2026-06-24;02:00;GROUP;L;Panama;Croatia;Foxborough;USA
+48;2026-06-24;05:00;GROUP;K;Colombia;DR Congo;Zapopan;Mexico
+49;2026-06-24;22:00;GROUP;B;Switzerland;Canada;Vancouver;Canada
+50;2026-06-24;22:00;GROUP;B;Bosnia & Herzegovina;Qatar;Seattle;USA
+51;2026-06-25;01:00;GROUP;C;Morocco;Haiti;Atlanta;USA
+52;2026-06-25;01:00;GROUP;C;Scotland;Brazil;Miami;USA
+53;2026-06-25;04:00;GROUP;A;South Africa;South Korea;Guadalupe;Mexico
+54;2026-06-25;04:00;GROUP;A;Czech Republic;Mexico;Mexico City;Mexico
+55;2026-06-25;23:00;GROUP;E;Curacao;Ivory Coast;Philadelphia;USA
+56;2026-06-25;23:00;GROUP;E;Ecuador;Germany;New Jersey;USA
+57;2026-06-26;02:00;GROUP;F;Tunisia;Netherlands;Kansas City;USA
+58;2026-06-26;02:00;GROUP;F;Japan;Sweden;Arlington;USA
+59;2026-06-26;05:00;GROUP;D;Turkey;USA;Los Angeles;USA
+60;2026-06-26;05:00;GROUP;D;Paraguay;Australia;Santa Clara;USA
+61;2026-06-26;22:00;GROUP;I;Norway;France;Foxborough;USA
+62;2026-06-26;22:00;GROUP;I;Senegal;Iraq;Toronto;Canada
+63;2026-06-27;03:00;GROUP;H;Cape Verde;Saudi Arabia;Houston;USA
+64;2026-06-27;03:00;GROUP;H;Uruguay;Spain;Zapopan;Mexico
+65;2026-06-27;06:00;GROUP;G;New Zealand;Belgium;Vancouver;Canada
+66;2026-06-27;06:00;GROUP;G;Egypt;Iran;Seattle;USA
+67;2026-06-28;00:00;GROUP;L;Panama;England;New Jersey;USA
+68;2026-06-28;00:00;GROUP;L;Croatia;Ghana;Philadelphia;USA
+69;2026-06-28;02:30;GROUP;K;Colombia;Portugal;Miami;USA
+70;2026-06-28;02:30;GROUP;K;DR Congo;Uzbekistan;Atlanta;USA
+71;2026-06-28;05:00;GROUP;J;Algeria;Austria;Kansas City;USA
+72;2026-06-28;05:00;GROUP;J;Jordan;Argentina;Arlington;USA
+73;2026-06-28;22:00;ROUND_OF_32;;Group A runners-up;Group B runners-up;Los Angeles;USA
+76;2026-06-29;20:00;ROUND_OF_32;;Group C winners;Group F runners-up;Houston;USA
+74;2026-06-29;23:30;ROUND_OF_32;;Group E winners;Group A/B/C/D/F third place;Foxborough;USA
+75;2026-06-30;04:00;ROUND_OF_32;;Group F winners;Group C runners-up;Guadalupe;Mexico
+78;2026-06-30;20:00;ROUND_OF_32;;Group E runners-up;Group I runners-up;Arlington;USA
+77;2026-07-01;00:00;ROUND_OF_32;;Group I winners;Group C/D/F/G/H third place;New Jersey;USA
+79;2026-07-01;04:00;ROUND_OF_32;;Group A winners;Group C/E/F/H/I third place;Mexico City;Mexico
+80;2026-07-01;19:00;ROUND_OF_32;;Group L winners;Group E/H/I/J/K third place;Atlanta;USA
+82;2026-07-01;23:00;ROUND_OF_32;;Group G winners;Group A/E/H/I/J third place;Seattle;USA
+81;2026-07-02;03:00;ROUND_OF_32;;Group D winners;Group B/E/F/I/J third place;Santa Clara;USA
+84;2026-07-02;22:00;ROUND_OF_32;;Group H winners;Group J runners-up;Los Angeles;USA
+83;2026-07-03;02:00;ROUND_OF_32;;Group K runners-up;Group L runners-up;Toronto;Canada
+85;2026-07-03;06:00;ROUND_OF_32;;Group B winners;Group E/F/G/I/J third place;Vancouver;Canada
+88;2026-07-03;21:00;ROUND_OF_32;;Group D runners-up;Group G runners-up;Arlington;USA
+86;2026-07-04;01:00;ROUND_OF_32;;Group J winners;Group H runners-up;Miami;USA
+87;2026-07-04;04:30;ROUND_OF_32;;Group K winners;Group D/E/I/J/L third place;Kansas City;USA
+90;2026-07-04;20:00;ROUND_OF_16;;Match 73 winners;Match 75 winners;Houston;USA
+89;2026-07-05;00:00;ROUND_OF_16;;Match 74 winners;Match 77 winners;Philadelphia;USA
+91;2026-07-05;23:00;ROUND_OF_16;;Match 76 winners;Match 78 winners;New Jersey;USA
+92;2026-07-06;03:00;ROUND_OF_16;;Match 79 winners;Match 80 winners;Mexico City;Mexico
+93;2026-07-06;22:00;ROUND_OF_16;;Match 83 winners;Match 84 winners;Arlington;USA
+94;2026-07-07;03:00;ROUND_OF_16;;Match 81 winners;Match 82 winners;Seattle;USA
+95;2026-07-07;19:00;ROUND_OF_16;;Match 86 winners;Match 88 winners;Atlanta;USA
+96;2026-07-07;23:00;ROUND_OF_16;;Match 85 winners;Match 87 winners;Vancouver;Canada
+97;2026-07-09;23:00;QUARTER_FINAL;;Match 89 winners;Match 90 winners;Foxborough;USA
+98;2026-07-10;22:00;QUARTER_FINAL;;Match 93 winners;Match 94 winners;Los Angeles;USA
+99;2026-07-12;00:00;QUARTER_FINAL;;Match 91 winners;Match 92 winners;Miami;USA
+100;2026-07-12;04:00;QUARTER_FINAL;;Match 95 winners;Match 96 winners;Kansas City;USA
+101;2026-07-14;22:00;SEMI_FINAL;;Match 97 winners;Match 98 winners;Arlington;USA
+102;2026-07-15;22:00;SEMI_FINAL;;Match 99 winners;Match 100 winners;Atlanta;USA
+103;2026-07-19;00:00;THIRD_PLACE;;Match 101 losers;Match 102 losers;Miami;USA
+104;2026-07-19;22:00;FINAL;;Match 101 winners;Match 102 winners;New Jersey;USA

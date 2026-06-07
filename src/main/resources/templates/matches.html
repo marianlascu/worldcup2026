@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Cup 2026 - Matches</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        'Matches',
+        'matches',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+
+            <h2>Program meciuri</h2>
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Match</th>
+                    <th>Stage</th>
+                    <th>Group</th>
+                    <th>Kickoff</th>
+                    <th>Venue</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="m : ${matches}">
+
+                    <td th:text="${m.matchNo}">1</td>
+
+                    <td>
+                        <span th:text="${m.teamA}">Team A</span>
+                        -
+                        <span th:text="${m.teamB}">Team B</span>
+                    </td>
+
+                    <td th:text="${m.stage}">GROUP</td>
+
+                    <td th:text="${m.groupName}">A</td>
+
+                    <td th:text="${m.kickoffAt}">2026-06-11</td>
+
+                    <td>
+                        <span th:text="${m.venueCity}">City</span>,
+                        <span th:text="${m.venueCountry}">Country</span>
+                    </td>
+
+                    <td>
+                        <span th:text="${m.scoreA}">-</span>
+                        :
+                        <span th:text="${m.scoreB}">-</span>
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

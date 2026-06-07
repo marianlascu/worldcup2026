@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Cup 2026 - Leagues</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        'Leagues',
+        'leagues',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+            <h2>Leagues</h2>
+
+            <p>
+                Aici vom crea ligi și vom adăuga players în fiecare ligă.
+            </p>
+
+            <div class="quick-grid">
+
+                <div class="quick-card">
+                    <strong>Family League</strong>
+                    <span>8 players</span>
+                </div>
+
+                <div class="quick-card">
+                    <strong>Office League</strong>
+                    <span>12 players</span>
+                </div>
+
+                <div class="quick-card">
+                    <strong>Friends League</strong>
+                    <span>6 players</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

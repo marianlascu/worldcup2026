@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="appLayout(pageTitle, activeTab, content)">
+
+    <div class="app-layout">
+
+        <aside class="side-menu">
+
+            <div class="side-title">
+                Sport Predictor
+            </div>
+
+            <a th:class="${activeTab == 'main'} ? 'side-tab active' : 'side-tab'" href="/main">Home</a>
+            <a th:class="${activeTab == 'tournaments'} ? 'side-tab active' : 'side-tab'" href="/tournaments">Tournaments</a>
+            <a th:class="${activeTab == 'leagues'} ? 'side-tab active' : 'side-tab'" href="/leagues">Leagues</a>
+            <a th:class="${activeTab == 'players'} ? 'side-tab active' : 'side-tab'" href="/players">Players</a>
+
+            <div class="side-spacer"></div>
+
+            <a class="side-tab logout" href="/logout">Logout</a>
+
+        </aside>
+
+        <main class="main-content">
+
+            <div class="topbar">
+
+                <div>
+                    <h1 th:text="${pageTitle}">Page title</h1>
+                    <div class="subtitle">Sports prediction platform</div>
+                </div>
+
+                <div class="user-pill">
+                    <span th:text="${fullName}">User</span>
+                    <span class="role" th:text="${role}">ROLE</span>
+                </div>
+
+            </div>
+
+            <div th:replace="${content}"></div>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+</html>

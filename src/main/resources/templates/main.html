@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Cup 2026</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        'Sport Predictor',
+        'main',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+
+            <h2>Bine ai venit!</h2>
+
+            <p>
+                Alege o opțiune din meniul din stânga.
+            </p>
+
+            <div class="quick-grid">
+
+                <a class="quick-card" href="/matches">
+                    <strong>Matches</strong>
+                    <span>Programul meciurilor</span>
+                </a>
+
+                <a class="quick-card" href="#">
+                    <strong>Tables</strong>
+                    <span>Clasamente grupe</span>
+                </a>
+
+                <a class="quick-card" href="#">
+                    <strong>Players</strong>
+                    <span>Participanți</span>
+                </a>
+
+                <a class="quick-card" href="#">
+                    <strong>Leagues</strong>
+                    <span>Clasament pronosticuri</span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <div class="tab-content-box">
+
+        <div class="quick-grid">
+
+            <form th:each="t : ${tournaments}"
+                  method="post"
+                  action="/tournaments/select"
+                  class="quick-card-form">
+
+                <input type="hidden" name="tournamentId" th:value="${t.id}">
+
+                <button type="submit"
+                        th:class="${selectedTournamentId != null and selectedTournamentId == t.id} ? 'quick-card selected' : 'quick-card'">
+
+                    <strong th:text="${t.name}">World Cup 2026</strong>
+
+                    <span th:text="${t.season}">2026</span>
+
+                    <span th:text="${t.code}">WC2026</span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
