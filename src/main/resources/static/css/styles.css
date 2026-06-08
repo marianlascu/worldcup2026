@@ -33,7 +33,7 @@ h1 {
 }
 
 a {
-    color: #ffd86b;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -934,4 +934,9 @@ table thead th {
 
 .tournament-body {
     overflow: auto;
+}
+
+.score-input {
+    width: 52px;
+    text-align: center;
 }

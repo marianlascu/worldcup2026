@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Sport Predictor - ' + ${league.name}">
+        Sport Predictor - League
+    </title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        ${'League - ' + league.name},
+        'leagues',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card tournament-shell league-shell">
+
+            <div class="tournament-freeze league-freeze">
+
+                <div class="tournament-title-box league-title-box">
+                </div>
+
+                <div th:replace="~{fragments/league-tabs :: leagueTabs(${activeLeagueTab})}">
+                </div>
+
+            </div>
+
+            <div class="tournament-body league-body">
+
+                <div th:replace="~{__${contentFragment}__}">
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

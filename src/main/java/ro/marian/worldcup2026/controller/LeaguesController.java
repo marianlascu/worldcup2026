@@ -14,6 +14,12 @@ import ro.marian.worldcup2026.repository.AppUserRepository;
 import ro.marian.worldcup2026.repository.LeagueMemberRepository;
 import ro.marian.worldcup2026.repository.LeagueRepository;
 import ro.marian.worldcup2026.repository.TournamentRepository;
+import ro.marian.worldcup2026.dto.PredictionMatchRow;
+import ro.marian.worldcup2026.repository.PredictionRepository;
+import ro.marian.worldcup2026.repository.MatchGameRepository;
+import ro.marian.worldcup2026.dto.RankingRow;
+import ro.marian.worldcup2026.model.MatchGame;
+import ro.marian.worldcup2026.model.Prediction;
 
 import java.util.List;
 import java.util.Map;
@@ -27,15 +33,23 @@ public class LeaguesController {
     private final LeagueMemberRepository leagueMemberRepository;
     private final TournamentRepository tournamentRepository;
     private final AppUserRepository appUserRepository;
+    private final PredictionRepository predictionRepository;
+    private final MatchGameRepository matchGameRepository;
 
-    public LeaguesController(LeagueRepository leagueRepository,
-                             LeagueMemberRepository leagueMemberRepository,
-                             TournamentRepository tournamentRepository,
-                             AppUserRepository appUserRepository) {
+    public LeaguesController(
+            LeagueRepository leagueRepository,
+            LeagueMemberRepository leagueMemberRepository,
+            TournamentRepository tournamentRepository,
+            AppUserRepository appUserRepository,
+            PredictionRepository predictionRepository,
+            MatchGameRepository matchGameRepository) {
+
         this.leagueRepository = leagueRepository;
         this.leagueMemberRepository = leagueMemberRepository;
         this.tournamentRepository = tournamentRepository;
         this.appUserRepository = appUserRepository;
+        this.predictionRepository = predictionRepository;
+        this.matchGameRepository = matchGameRepository;
     }
 
     @GetMapping("/leagues")
@@ -116,61 +130,17 @@ public class LeaguesController {
     }
 
     @GetMapping("/leagues/{id}")
-    public String leagueDetails(@PathVariable Long id,
-                                HttpSession session,
-                                Model model) {
+    public String leagueOverview(@PathVariable Long id,
+                                 HttpSession session,
+                                 Model model) {
 
-        if (session.getAttribute("USER_ID") == null) {
-            return "redirect:/login";
+        String view = openLeagueTab(id, "overview", session, model);
+
+        if (!"league-layout".equals(view)) {
+            return view;
         }
 
-        Long userId = currentUserId(session);
-
-        League league = leagueRepository.findById(id).orElse(null);
-
-        if (league == null || !"Y".equalsIgnoreCase(league.getActiveYn())) {
-            return "redirect:/leagues";
-        }
-
-        boolean isMember = leagueMemberRepository.findByLeagueIdAndUserId(id, userId)
-                .filter(m -> "Y".equalsIgnoreCase(m.getActiveYn()))
-                .isPresent();
-
-        if (!isMember && !isAdmin(session)) {
-            return "redirect:/leagues";
-        }
-
-        List<LeagueMember> members =
-                leagueMemberRepository.findByLeagueIdAndActiveYnOrderByJoinedAtAsc(id, "Y");
-
-        Map<Long, AppUser> usersById = appUserRepository.findAllById(
-                members.stream()
-                        .map(LeagueMember::getUserId)
-                        .toList()
-        ).stream().collect(Collectors.toMap(AppUser::getId, u -> u));
-
-        List<LeagueMemberRow> memberRows = members.stream()
-                .map(m -> {
-                    AppUser user = usersById.get(m.getUserId());
-
-                    return new LeagueMemberRow(
-                            m.getUserId(),
-                            user == null ? "" : user.getUsername(),
-                            user == null ? "(missing user)" : user.getFullName(),
-                            m.getRole(),
-                            m.getJoinedAt()
-                    );
-                })
-                .toList();
-
-        boolean canEditLeague = canEditLeague(session, league);
-
-        addUserInfo(session, model);
-        model.addAttribute("league", league);
-        model.addAttribute("members", memberRows);
-        model.addAttribute("canEditLeague", canEditLeague);
-
-        return "league-details";
+        return view;
     }
 
     @PostMapping("/leagues/{id}/rename")
@@ -204,7 +174,7 @@ public class LeaguesController {
 
     @PostMapping("/leagues/{id}/members/add")
     public String addMember(@PathVariable Long id,
-                            @RequestParam String username,
+                            @RequestParam Long userIdToAdd,
                             HttpSession session) {
 
         if (session.getAttribute("USER_ID") == null) {
@@ -221,36 +191,265 @@ public class LeaguesController {
             return "redirect:/leagues/" + id;
         }
 
-        String cleanUsername = username == null ? "" : username.trim();
-
-        if (cleanUsername.isBlank()) {
-            return "redirect:/leagues/" + id;
-        }
-
-        AppUser user = appUserRepository
-                .findByUsernameIgnoreCase(cleanUsername)
-                .orElse(null);
+        AppUser user = appUserRepository.findById(userIdToAdd).orElse(null);
 
         if (user == null) {
             return "redirect:/leagues/" + id;
         }
 
-        boolean alreadyExists = leagueMemberRepository
+        LeagueMember existing = leagueMemberRepository
                 .findByLeagueIdAndUserId(id, user.getId())
-                .filter(m -> "Y".equalsIgnoreCase(m.getActiveYn()))
-                .isPresent();
+                .orElse(null);
 
-        if (!alreadyExists) {
+        if (existing == null) {
             LeagueMember member = new LeagueMember();
             member.setLeagueId(id);
             member.setUserId(user.getId());
             member.setRole("PLAYER");
+            member.setActiveYn("Y");
 
+            leagueMemberRepository.save(member);
+        } else {
+            existing.setActiveYn("Y");
+
+            if (existing.getRole() == null || existing.getRole().isBlank()) {
+                existing.setRole("PLAYER");
+            }
+
+            leagueMemberRepository.save(existing);
+        }
+
+        return "redirect:/leagues/" + id;
+    }
+
+    @PostMapping("/leagues/{id}/members/{userId}/remove")
+    public String removeMember(@PathVariable Long id,
+                               @PathVariable Long userId,
+                               HttpSession session) {
+
+        if (session.getAttribute("USER_ID") == null) {
+            return "redirect:/login";
+        }
+
+        League league = leagueRepository.findById(id).orElse(null);
+
+        if (league == null || !"Y".equalsIgnoreCase(league.getActiveYn())) {
+            return "redirect:/leagues";
+        }
+
+        if (!canEditLeague(session, league)) {
+            return "redirect:/leagues/" + id;
+        }
+
+        if (userId.equals(league.getOwnerUserId())) {
+            return "redirect:/leagues/" + id;
+        }
+
+        LeagueMember member = leagueMemberRepository
+                .findByLeagueIdAndUserId(id, userId)
+                .orElse(null);
+
+        if (member != null) {
+            member.setActiveYn("N");
             leagueMemberRepository.save(member);
         }
 
         return "redirect:/leagues/" + id;
     }
+    
+    @GetMapping("/leagues/{id}/members")
+    public String leagueMembers(@PathVariable Long id,
+                                HttpSession session,
+                                Model model) {
+
+        String view = openLeagueTab(id, "members", session, model);
+
+        if (!"league-layout".equals(view)) {
+            return view;
+        }
+
+        List<LeagueMember> members =
+                leagueMemberRepository.findByLeagueIdAndActiveYnOrderByJoinedAtAsc(id, "Y");
+
+        Map<Long, AppUser> usersById = appUserRepository.findAllById(
+                members.stream()
+                        .map(LeagueMember::getUserId)
+                        .toList()
+        ).stream().collect(Collectors.toMap(AppUser::getId, u -> u));
+
+        List<LeagueMemberRow> memberRows = members.stream()
+                .map(m -> {
+                    AppUser user = usersById.get(m.getUserId());
+
+                    return new LeagueMemberRow(
+                            m.getUserId(),
+                            user == null ? "" : user.getUsername(),
+                            user == null ? "(missing user)" : user.getFullName(),
+                            m.getRole(),
+                            m.getJoinedAt()
+                    );
+                })
+                .toList();
+
+        model.addAttribute("members", memberRows);
+        java.util.Set<Long> existingMemberUserIds = members.stream()
+                .map(LeagueMember::getUserId)
+                .collect(java.util.stream.Collectors.toSet());
+
+        List<AppUser> availableUsers = appUserRepository.findAll()
+                .stream()
+                .filter(u -> !existingMemberUserIds.contains(u.getId()))
+                .toList();
+
+        model.addAttribute("allUsers", availableUsers);
+
+        return view;
+    }    
+    
+    @GetMapping("/leagues/{id}/predictions")
+    public String leaguePredictions(@PathVariable Long id,
+                                    HttpSession session,
+                                    Model model) {
+
+        String view = openLeagueTab(id, "predictions", session, model);
+
+        if (!"league-layout".equals(view)) {
+            return view;
+        }
+
+        Long userId = currentUserId(session);
+
+        League league = (League) model.getAttribute("league");
+
+        List<MatchGame> matches =
+                matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(
+                        league.getTournamentId()
+                );
+
+        Map<Long, Prediction> predictionsByMatchId =
+                predictionRepository.findByLeagueIdAndUserIdOrderByMatchIdAsc(id, userId)
+                        .stream()
+                        .collect(Collectors.toMap(Prediction::getMatchId, p -> p));
+
+        List<PredictionMatchRow> predictionRows = matches.stream()
+                .map(m -> {
+                    Prediction p = predictionsByMatchId.get(m.getId());
+
+                    return new PredictionMatchRow(
+                            m.getId(),
+                            m.getMatchNo(),
+                            m.getStage(),
+                            m.getGroupName(),
+                            m.getTeamA(),
+                            m.getTeamB(),
+                            m.getKickoffAt(),
+                            m.getVenueCity(),
+                            m.getScoreA(),
+                            m.getScoreB(),
+                            p == null ? null : p.getPredictedScoreA(),
+                            p == null ? null : p.getPredictedScoreB()
+                    );
+                })
+                .toList();
+
+        model.addAttribute("predictionRows", predictionRows);
+
+        return view;
+    }
+
+    @PostMapping("/leagues/{id}/predictions/save")
+    public String savePredictions(@PathVariable Long id,
+                                  @RequestParam List<Long> matchId,
+                                  @RequestParam Map<String, String> params,
+                                  HttpSession session) {
+
+        if (session.getAttribute("USER_ID") == null) {
+            return "redirect:/login";
+        }
+
+        Long userId = currentUserId(session);
+
+        League league = leagueRepository.findById(id).orElse(null);
+
+        if (league == null || !"Y".equalsIgnoreCase(league.getActiveYn())) {
+            return "redirect:/leagues";
+        }
+
+        boolean isMember = leagueMemberRepository.findByLeagueIdAndUserId(id, userId)
+                .filter(m -> "Y".equalsIgnoreCase(m.getActiveYn()))
+                .isPresent();
+
+        if (!isMember && !isAdmin(session)) {
+            return "redirect:/leagues";
+        }
+
+        for (Long mid : matchId) {
+
+            Integer scoreA = parseInteger(params.get("scoreA_" + mid));
+            Integer scoreB = parseInteger(params.get("scoreB_" + mid));
+
+            if (scoreA == null && scoreB == null) {
+                continue;
+            }
+
+            Prediction prediction = predictionRepository
+                    .findByLeagueIdAndUserIdAndMatchId(id, userId, mid)
+                    .orElseGet(() -> {
+                        Prediction p = new Prediction();
+                        p.setLeagueId(id);
+                        p.setUserId(userId);
+                        p.setMatchId(mid);
+                        return p;
+                    });
+
+            prediction.setPredictedScoreA(scoreA);
+            prediction.setPredictedScoreB(scoreB);
+
+            predictionRepository.save(prediction);
+        }
+
+        return "redirect:/leagues/" + id + "/predictions";
+    }    
+    
+    @GetMapping("/leagues/{id}/rankings")
+    public String leagueRankings(@PathVariable Long id,
+                                 HttpSession session,
+                                 Model model) {
+
+        String view = openLeagueTab(id, "rankings", session, model);
+
+        if (!"league-layout".equals(view)) {
+            return view;
+        }
+
+        List<LeagueMember> members =
+                leagueMemberRepository.findByLeagueIdAndActiveYnOrderByJoinedAtAsc(id, "Y");
+
+        Map<Long, AppUser> usersById = appUserRepository.findAllById(
+                members.stream()
+                        .map(LeagueMember::getUserId)
+                        .toList()
+        ).stream().collect(Collectors.toMap(AppUser::getId, u -> u));
+
+        List<Prediction> predictions =
+                predictionRepository.findByLeagueIdOrderByUserIdAscMatchIdAsc(id);
+
+        Map<Long, MatchGame> matchesById = matchGameRepository.findAllById(
+                predictions.stream()
+                        .map(Prediction::getMatchId)
+                        .toList()
+        ).stream().collect(Collectors.toMap(MatchGame::getId, m -> m));
+
+        List<RankingRow> rankings = members.stream()
+                .map(member -> buildRankingRow(member, usersById, predictions, matchesById))
+                .sorted(java.util.Comparator.comparingInt(RankingRow::getPoints).reversed()
+                        .thenComparing(RankingRow::getFullName))
+                .toList();
+
+        model.addAttribute("rankings", rankings);
+
+        return view;
+    }  
 
     private String generateLeagueCode() {
         return "L-" + UUID.randomUUID()
@@ -278,4 +477,130 @@ public class LeaguesController {
         model.addAttribute("fullName", session.getAttribute("FULL_NAME"));
         model.addAttribute("role", session.getAttribute("ROLE"));
     }
+    
+    private String openLeagueTab(Long id,
+                             String activeLeagueTab,
+                             HttpSession session,
+                             Model model) {
+
+    if (session.getAttribute("USER_ID") == null) {
+        return "redirect:/login";
+    }
+
+    Long userId = currentUserId(session);
+
+    League league = leagueRepository.findById(id).orElse(null);
+
+    if (league == null || !"Y".equalsIgnoreCase(league.getActiveYn())) {
+        return "redirect:/leagues";
+    }
+
+    boolean isMember = leagueMemberRepository.findByLeagueIdAndUserId(id, userId)
+            .filter(m -> "Y".equalsIgnoreCase(m.getActiveYn()))
+            .isPresent();
+
+    if (!isMember && !isAdmin(session)) {
+        return "redirect:/leagues";
+    }
+
+    addUserInfo(session, model);
+
+    model.addAttribute("league", league);
+    model.addAttribute("activeLeagueTab", activeLeagueTab);
+    model.addAttribute("contentFragment", leagueContentFragmentFor(activeLeagueTab));
+    model.addAttribute("canEditLeague", canEditLeague(session, league));
+
+    return "league-layout";
+    }
+    
+    private String leagueContentFragmentFor(String activeLeagueTab) {
+        return switch (activeLeagueTab) {
+            case "overview" -> "league-overview :: content";
+            case "members" -> "league-members :: content";
+            case "predictions" -> "league-predictions :: content";
+            case "rankings" -> "league-rankings :: content";
+            default -> "league-overview :: content";
+        };
+    }    
+    
+    private Integer parseInteger(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Integer.valueOf(value.trim());
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }    
+    
+    private RankingRow buildRankingRow(LeagueMember member,
+                                       Map<Long, AppUser> usersById,
+                                       List<Prediction> allPredictions,
+                                       Map<Long, MatchGame> matchesById) {
+
+        AppUser user = usersById.get(member.getUserId());
+
+        int predictionsCount = 0;
+        int exactScoreCount = 0;
+        int resultCount = 0;
+        int points = 0;
+
+        for (Prediction p : allPredictions) {
+
+            if (!member.getUserId().equals(p.getUserId())) {
+                continue;
+            }
+
+            MatchGame match = matchesById.get(p.getMatchId());
+
+            if (match == null) {
+                continue;
+            }
+
+            if (p.getPredictedScoreA() == null || p.getPredictedScoreB() == null) {
+                continue;
+            }
+
+            if (match.getScoreA() == null || match.getScoreB() == null) {
+                continue;
+            }
+
+            predictionsCount++;
+
+            boolean exact =
+                    p.getPredictedScoreA().equals(match.getScoreA())
+                            && p.getPredictedScoreB().equals(match.getScoreB());
+
+            if (exact) {
+                exactScoreCount++;
+                points += 3;
+                continue;
+            }
+
+            boolean sameResult =
+                    resultSign(p.getPredictedScoreA(), p.getPredictedScoreB())
+                            == resultSign(match.getScoreA(), match.getScoreB());
+
+            if (sameResult) {
+                resultCount++;
+                points += 1;
+            }
+        }
+
+        return new RankingRow(
+                member.getUserId(),
+                user == null ? "" : user.getUsername(),
+                user == null ? "(missing user)" : user.getFullName(),
+                predictionsCount,
+                exactScoreCount,
+                resultCount,
+                points
+        );
+    }
+
+    private int resultSign(Integer a, Integer b) {
+        return Integer.compare(a, b);
+    }    
 }

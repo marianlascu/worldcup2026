@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <section class="card league-inline-card">
+
+        <h3>Predictions</h3>
+
+        <form method="post"
+              th:action="@{/leagues/{id}/predictions/save(id=${league.id})}">
+
+            <table class="simple-table">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Stage</th>
+                    <th>Date</th>
+                    <th>Match</th>
+                    <th>Official</th>
+                    <th>Your prediction</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="m : ${predictionRows}">
+                    <td th:text="${m.matchNo}">1</td>
+
+                    <td>
+                        <span th:text="${m.groupName != null and m.groupName != '' ? m.groupName : m.stage}">
+                            Group A
+                        </span>
+                    </td>
+
+                    <td>
+                        <span th:if="${m.kickoffAt != null}"
+                              th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}">
+                            11.06 22:00
+                        </span>
+                    </td>
+
+                    <td>
+                        <strong th:text="${m.teamA}">Team A</strong>
+                        <span> - </span>
+                        <strong th:text="${m.teamB}">Team B</strong>
+                    </td>
+
+                    <td>
+                        <span th:if="${m.officialScoreA != null and m.officialScoreB != null}"
+                              th:text="${m.officialScoreA + ' - ' + m.officialScoreB}">
+                            2 - 1
+                        </span>
+                        <span th:if="${m.officialScoreA == null or m.officialScoreB == null}">
+                            -
+                        </span>
+                    </td>
+
+                    <td>
+                        <input type="hidden"
+                               name="matchId"
+                               th:value="${m.matchId}">
+
+                        <input type="number"
+                               min="0"
+                               max="30"
+                               class="score-input"
+                               th:name="${'scoreA_' + m.matchId}"
+                               th:value="${m.predictedScoreA}">
+
+                        <span> - </span>
+
+                        <input type="number"
+                               min="0"
+                               max="30"
+                               class="score-input"
+                               th:name="${'scoreB_' + m.matchId}"
+                               th:value="${m.predictedScoreB}">
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(predictionRows)}">
+                    <td colspan="6">No matches available for this league tournament.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 14px;">
+                <button type="submit">Save predictions</button>
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+</body>
+</html>

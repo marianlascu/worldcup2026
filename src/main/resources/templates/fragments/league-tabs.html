@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="leagueTabs(activeLeagueTab)">
+
+    <div class="sub-tabs">
+
+        <a th:class="${activeLeagueTab == 'overview'} ? 'sub-tab active' : 'sub-tab'"
+           th:href="@{/leagues/{id}(id=${league.id})}">
+            Overview
+        </a>
+
+        <a th:class="${activeLeagueTab == 'members'} ? 'sub-tab active' : 'sub-tab'"
+           th:href="@{/leagues/{id}/members(id=${league.id})}">
+            Members
+        </a>
+
+        <a th:class="${activeLeagueTab == 'predictions'} ? 'sub-tab active' : 'sub-tab'"
+           th:href="@{/leagues/{id}/predictions(id=${league.id})}">
+            Predictions
+        </a>
+
+        <a th:class="${activeLeagueTab == 'rankings'} ? 'sub-tab active' : 'sub-tab'"
+           th:href="@{/leagues/{id}/rankings(id=${league.id})}">
+            Rankings
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

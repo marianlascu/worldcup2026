@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <div class="league-overview">
+
+        <div class="quick-grid">
+
+            <div class="quick-card">
+                <strong th:text="${league.name}">League name</strong>
+                <span>League</span>
+            </div>
+
+            <div class="quick-card">
+                <strong th:text="${league.code}">L-12345678</strong>
+                <span>Invite code</span>
+            </div>
+
+            <div class="quick-card">
+                <strong>Predictions</strong>
+                <span>Coming soon</span>
+            </div>
+
+            <div class="quick-card">
+                <strong>Rankings</strong>
+                <span>Coming soon</span>
+            </div>
+
+        </div>
+
+        <div th:if="${canEditLeague}" class="league-edit-box">
+
+            <h3>Edit league</h3>
+
+            <form method="post"
+                  th:action="@{/leagues/{id}/rename(id=${league.id})}"
+                  class="league-form">
+
+                <div>
+                    <label>League name</label>
+                    <input type="text"
+                           name="name"
+                           required
+                           th:value="${league.name}">
+                </div>
+
+                <button type="submit">Save</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

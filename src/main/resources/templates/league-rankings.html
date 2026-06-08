@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <section class="card league-inline-card">
+
+        <h3>Rankings</h3>
+
+        <table class="simple-table">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Username</th>
+                <th>Predictions</th>
+                <th>Exact scores</th>
+                <th>Correct results</th>
+                <th>Points</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="r, it : ${rankings}">
+                <td th:text="${it.index + 1}">1</td>
+                <td th:text="${r.fullName}">Player name</td>
+                <td th:text="${r.username}">username</td>
+                <td th:text="${r.predictionsCount}">0</td>
+                <td th:text="${r.exactScoreCount}">0</td>
+                <td th:text="${r.resultCount}">0</td>
+                <td>
+                    <strong th:text="${r.points}">0</strong>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(rankings)}">
+                <td colspan="7">No ranking data yet.</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </section>
+
+</div>
+
+</body>
+</html>

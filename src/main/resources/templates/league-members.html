@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <div class="league-members">
+
+        <section th:if="${canEditLeague}" class="card league-inline-card">
+
+            <h3>Add member</h3>
+
+            <form method="post"
+                  th:action="@{/leagues/{id}/members/add(id=${league.id})}"
+                  class="league-form">
+
+                <div>
+                    <label>User</label>
+
+                    <select name="userIdToAdd" required>
+                        <option value="">Choose user</option>
+
+                        <option th:each="u : ${allUsers}"
+                                th:value="${u.id}"
+                                th:text="${u.fullName + ' (' + u.username + ')'}">
+                            User
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit">Add member</button>
+
+            </form>
+
+        </section>
+
+        <section class="card league-inline-card">
+
+            <h3>Members</h3>
+
+            <table class="simple-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th th:if="${canEditLeague}">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="m : ${members}">
+                    <td th:text="${m.fullName}">Marian</td>
+                    <td th:text="${m.username}">marian</td>
+                    <td th:text="${m.role}">OWNER</td>
+                    <td th:text="${#temporals.format(m.joinedAt, 'dd.MM.yyyy HH:mm')}">
+                        08.06.2026 19:30
+                    </td>
+
+                    <td th:if="${canEditLeague}">
+                        <form method="post"
+                              th:if="${m.userId != league.ownerUserId}"
+                              th:action="@{/leagues/{id}/members/{userId}/remove(id=${league.id}, userId=${m.userId})}">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(members)}">
+                    <td th:colspan="${canEditLeague} ? 5 : 4">No members yet.</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>
