@@ -19,15 +19,12 @@
 
     <div th:fragment="content">
 
-        <section class="card tournament-shell">
+        <section th:fragment="content" class="card tournament-shell">
 
             <div class="tournament-freeze">
 
                 <div class="tournament-title-box">
-                    <div class="muted">Selected tournament</div>
-                    <h2 th:text="${selectedTournament.name}">
-                        FIFA World Cup 2026
-                    </h2>
+
                 </div>
 
                 <div th:replace="~{fragments/tournament-tabs :: tournamentTabs(${activeTab})}"></div>

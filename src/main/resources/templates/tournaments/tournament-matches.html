@@ -4,57 +4,52 @@
 
 <div th:fragment="content">
 
-    <div class="tab-content-box">
+    <table class="data-table" th:if="${matches != null and !matches.isEmpty()}">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Kickoff</th>
+            <th>Team A</th>
+            <th>Team B</th>
+            <th>Score</th>
+            <th>Stage</th>
+            <th>Group</th>
+            <th>City</th>
+            <th>Country</th>
+        </tr>
+        </thead>
 
-        <h3>Matches</h3>
+        <tbody>
+        <tr th:each="m : ${matches}">
+            <td th:text="${m.matchNo}">1</td>
 
-        <p>
-            Lista meciurilor pentru
-            <strong th:text="${selectedTournament.name}">Tournament</strong>.
-        </p>
+            <td th:text="${#temporals.format(m.kickoffAt, 'dd.MM.yyyy HH:mm')}">
+                11.06.2026 22:00
+            </td>
 
-        <table class="data-table" th:if="${matches != null and !matches.isEmpty()}">
-            <thead>
-            <tr>
-                <th>No</th>
-                <th>Stage</th>
-                <th>Group</th>
-                <th>Team A</th>
-                <th>Team B</th>
-                <th>Kickoff</th>
-                <th>City</th>
-                <th>Country</th>
-                <th>Score</th>
-            </tr>
-            </thead>
+            <td th:text="${m.teamA}">Team A</td>
 
-            <tbody>
-            <tr th:each="m : ${matches}">
-                <td th:text="${m.matchNo}">1</td>
-                <td th:text="${m.stage}">Group Stage</td>
-                <td th:text="${m.groupName}">A</td>
-                <td th:text="${m.teamA}">Team A</td>
-                <td th:text="${m.teamB}">Team B</td>
-                <td th:text="${#temporals.format(m.kickoffAt, 'dd.MM.yyyy HH:mm')}">
-                    11.06.2026 22:00
-                </td>
-                <td th:text="${m.venueCity}">City</td>
-                <td th:text="${m.venueCountry}">Country</td>
-                <td>
-                    <span th:if="${m.scoreA != null and m.scoreB != null}"
-                          th:text="${m.scoreA + ' - ' + m.scoreB}">
-                        0 - 0
-                    </span>
-                    <span th:if="${m.scoreA == null or m.scoreB == null}">-</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <td th:text="${m.teamB}">Team B</td>
 
-        <div th:if="${matches == null or matches.isEmpty()}" class="empty-box">
-            Nu există meciuri pentru acest turneu.
-        </div>
+            <td>
+                <span th:if="${m.scoreA != null and m.scoreB != null}"
+                      th:text="${m.scoreA + ' - ' + m.scoreB}">
+                    0 - 0
+                </span>
+                <span th:if="${m.scoreA == null or m.scoreB == null}">-</span>
+            </td>
 
+            <td th:text="${m.stage}">Group Stage</td>
+            <td th:text="${m.groupName}">A</td>
+            <td th:text="${m.venueCity}">City</td>
+            <td th:text="${m.venueCountry}">Country</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${activeTab == 'matches' and (matches == null or matches.isEmpty())}"
+         class="empty-box">
+        Nu există meciuri pentru acest turneu.
     </div>
 
 </div>

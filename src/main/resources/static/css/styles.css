@@ -251,3 +251,86 @@ button {
     background: rgba(180,40,40,0.9);
     color: white;
 }
+
+/* =========================================================
+   FIXED APP LAYOUT
+   vertical menu + topbar + tournament tabs stay fixed
+   only page/tab body scrolls
+   ========================================================= */
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.app-layout {
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.side-menu {
+    height: 100vh;
+    flex: 0 0 230px;
+    overflow: hidden;
+}
+
+.main-content {
+    flex: 1;
+    height: 100vh;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.topbar {
+    flex: 0 0 auto;
+    margin-bottom: 20px;
+}
+
+.main-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.main-body > div {
+    height: 100%;
+    min-height: 0;
+}
+
+.card.tournament-shell {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tournament-freeze {
+    flex: 0 0 auto;
+}
+
+.tournament-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+}
+
+.sub-tabs {
+    flex: 0 0 auto;
+}
+
+.data-table thead th,
+table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+

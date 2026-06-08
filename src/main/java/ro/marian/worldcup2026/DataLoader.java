@@ -34,10 +34,12 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         loadUsersIfMissing();
         loadTournamentsIfMissing();
         loadMatchesIfEmpty();
         repairWorldCupMatchesTournamentId();
+
     }
 
     private void loadUsersIfMissing() {
@@ -132,19 +134,20 @@ public class DataLoader implements CommandLineRunner {
         Tournament wc2026 = tournamentRepository.findByCode("WC2026")
                 .orElseThrow(() -> new IllegalStateException("Tournament WC2026 not found"));
 
-        var matches = matchGameRepository.findAll();
+        java.util.List<MatchGame> matches = matchGameRepository.findAll();
 
-        boolean changed = false;
+        long nullCount = matches.stream()
+                .filter(m -> m.getTournamentId() == null)
+                .count();
 
         for (MatchGame match : matches) {
             if (match.getTournamentId() == null) {
                 match.setTournamentId(wc2026.getId());
-                changed = true;
             }
         }
 
-        if (changed) {
-            matchGameRepository.saveAll(matches);
-        }
-    }    
+        matchGameRepository.saveAll(matches);
+
+        System.out.println("=== REPAIR DONE ===");
+    }   
 }
