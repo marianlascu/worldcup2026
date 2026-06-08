@@ -1,6 +1,6 @@
 #FileLock
-#Mon Jun 08 10:06:40 EEST 2026
-hostName=Marian-Lenovo
-id=19ea60e0afd588fed7fa35a65ddeffbb7bcd8485364
+#Mon Jun 08 12:34:17 EEST 2026
+hostName=10.216.222.74
+id=19ea6952e3f8ab24a8a6da3938609bfe630aafb40b8
 method=file
-server=10.127.41.39\:62060
+server=10.216.222.74\:60851

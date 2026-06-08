@@ -37,6 +37,7 @@ public class DataLoader implements CommandLineRunner {
         loadUsersIfMissing();
         loadTournamentsIfMissing();
         loadMatchesIfEmpty();
+        repairWorldCupMatchesTournamentId();
     }
 
     private void loadUsersIfMissing() {
@@ -125,4 +126,25 @@ public class DataLoader implements CommandLineRunner {
             }
         }
     }
+    
+    private void repairWorldCupMatchesTournamentId() {
+
+        Tournament wc2026 = tournamentRepository.findByCode("WC2026")
+                .orElseThrow(() -> new IllegalStateException("Tournament WC2026 not found"));
+
+        var matches = matchGameRepository.findAll();
+
+        boolean changed = false;
+
+        for (MatchGame match : matches) {
+            if (match.getTournamentId() == null) {
+                match.setTournamentId(wc2026.getId());
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            matchGameRepository.saveAll(matches);
+        }
+    }    
 }
