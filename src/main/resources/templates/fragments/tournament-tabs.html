@@ -26,6 +26,11 @@
            th:href="@{/tournaments/{id}/teams(id=${selectedTournament.id})}">
             Teams
         </a>
+        
+        <a th:class="${activeTournamentTab == 'knockout'} ? 'sub-tab active' : 'sub-tab'"
+           th:href="@{/tournaments/{id}/knockout(id=${selectedTournament.id})}">
+            Knock-Out
+        </a>        
 
     </div>
 

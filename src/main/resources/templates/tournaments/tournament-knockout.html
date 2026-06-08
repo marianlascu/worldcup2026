@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+
+    <div class="ko-bracket ko-bracket-slots">
+
+        <!-- LEFT: R32 -> R16 -> QF -> SF -->
+        <div class="ko-side ko-left">
+
+            <div class="ko-column ko-slot-column ko-col-r32">
+                <div class="ko-round-title">Round of 32</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${r32Left}"
+                     th:style="'grid-row:' + (${it.index} * 2 + 1) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 1}">1</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>R32</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-r16">
+                <div class="ko-round-title">Round of 16</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${r16Left}"
+                     th:style="'grid-row:' + (${it.index} * 4 + 2) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 1}">1</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>R16</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-qf">
+                <div class="ko-round-title">Quarter-finals</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${qfLeft}"
+                     th:style="'grid-row:' + (${it.index} * 8 + 4) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 1}">1</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>QF</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-sf">
+                <div class="ko-round-title">Semi-finals</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${sfLeft}"
+                     th:style="'grid-row:8 / span 2'">
+                    <div class="ko-card-number">1</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>SF</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CENTER -->
+        <div class="ko-center">
+            <div class="ko-trophy-table">
+                <div class="ko-trophy">🏆</div>
+            </div>
+
+            <div class="ko-center-title">Final</div>
+
+            <div class="ko-card ko-center-card" th:if="${finalMatch != null}">
+                <div class="ko-card-head"><span th:text="'M' + ${finalMatch.matchNo}">M104</span><span>FINAL</span></div>
+                <div class="ko-team-row"><span th:text="${finalMatch.teamA}">Team A</span><strong th:text="${finalMatch.scoreA != null ? finalMatch.scoreA : '-'}">-</strong></div>
+                <div class="ko-team-row"><span th:text="${finalMatch.teamB}">Team B</span><strong th:text="${finalMatch.scoreB != null ? finalMatch.scoreB : '-'}">-</strong></div>
+                <div class="ko-card-meta">
+                    <span th:if="${finalMatch.kickoffAt != null}" th:text="${#temporals.format(finalMatch.kickoffAt, 'dd.MM HH:mm')}"></span>
+                    <span th:if="${finalMatch.venueCity != null and finalMatch.venueCity != ''}"> · <span th:text="${finalMatch.venueCity}">City</span></span>
+                </div>
+            </div>
+
+            <div class="ko-center-title ko-third-title">3rd Place</div>
+
+            <div class="ko-card ko-center-card ko-small-final" th:if="${thirdPlace != null}">
+                <div class="ko-card-head"><span th:text="'M' + ${thirdPlace.matchNo}">M103</span><span>3RD</span></div>
+                <div class="ko-team-row"><span th:text="${thirdPlace.teamA}">Team A</span><strong th:text="${thirdPlace.scoreA != null ? thirdPlace.scoreA : '-'}">-</strong></div>
+                <div class="ko-team-row"><span th:text="${thirdPlace.teamB}">Team B</span><strong th:text="${thirdPlace.scoreB != null ? thirdPlace.scoreB : '-'}">-</strong></div>
+                <div class="ko-card-meta">
+                    <span th:if="${thirdPlace.kickoffAt != null}" th:text="${#temporals.format(thirdPlace.kickoffAt, 'dd.MM HH:mm')}"></span>
+                    <span th:if="${thirdPlace.venueCity != null and thirdPlace.venueCity != ''}"> · <span th:text="${thirdPlace.venueCity}">City</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: SF -> QF -> R16 -> R32 -->
+        <div class="ko-side ko-right">
+
+            <div class="ko-column ko-slot-column ko-col-sf">
+                <div class="ko-round-title">Semi-finals</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${sfRight}"
+                     th:style="'grid-row:8 / span 2'">
+                    <div class="ko-card-number">2</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>SF</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-qf">
+                <div class="ko-round-title">Quarter-finals</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${qfRight}"
+                     th:style="'grid-row:' + (${it.index} * 8 + 4) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 3}">3</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>QF</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-r16">
+                <div class="ko-round-title">Round of 16</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${r16Right}"
+                     th:style="'grid-row:' + (${it.index} * 4 + 2) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 5}">5</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>R16</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ko-column ko-slot-column ko-col-r32">
+                <div class="ko-round-title">Round of 32</div>
+
+                <div class="ko-card"
+                     th:each="m, it : ${r32Right}"
+                     th:style="'grid-row:' + (${it.index} * 2 + 1) + ' / span 2'">
+                    <div class="ko-card-number" th:text="${it.index + 9}">9</div>
+                    <div class="ko-card-head"><span th:text="'M' + ${m.matchNo}">M</span><span>R32</span></div>
+                    <div class="ko-team-row"><span th:text="${m.teamA}">Team A</span><strong th:text="${m.scoreA != null ? m.scoreA : '-'}">-</strong></div>
+                    <div class="ko-team-row"><span th:text="${m.teamB}">Team B</span><strong th:text="${m.scoreB != null ? m.scoreB : '-'}">-</strong></div>
+                    <div class="ko-card-meta">
+                        <span th:if="${m.kickoffAt != null}" th:text="${#temporals.format(m.kickoffAt, 'dd.MM HH:mm')}"></span>
+                        <span th:if="${m.venueCity != null and m.venueCity != ''}"> · <span th:text="${m.venueCity}">City</span></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

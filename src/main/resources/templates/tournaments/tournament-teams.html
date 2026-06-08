@@ -3,6 +3,37 @@
 <body>
 
 <div th:fragment="content">
+
+    <div class="teams-grid">
+
+        <div class="team-group-card" th:each="group : ${groups}">
+
+            <div class="group-title">
+                <span th:text="${group.name}">Group A</span>
+            </div>
+
+            <div class="team-list">
+
+                <div class="team-pill" th:each="row : ${group.rows}">
+
+                    <span class="team-flag"
+                          th:text="${row.flagEmoji}">
+                        🇲🇽
+                    </span>
+
+                    <span class="team-name"
+                          th:text="${row.teamName}">
+                        Mexico
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 </body>

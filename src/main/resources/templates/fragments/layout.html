@@ -5,7 +5,10 @@
 
 <div th:fragment="appLayout(pageTitle, activeTab, content)">
 
-    <div class="app-layout">
+    <div class="app-layout"
+         th:style="${pageBgImage != null} ? 
+                   'background-image: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.72)), url(/img/' + ${pageBgImage} + ')' 
+                   : null">
 
         <aside class="side-menu">
 

@@ -4,18 +4,19 @@
 
 <div th:fragment="content">
 
-    <table class="data-table" th:if="${matches != null and !matches.isEmpty()}">
+    <table class="data-table matches-table" th:if="${matches != null and !matches.isEmpty()}">
         <thead>
         <tr>
             <th>No</th>
             <th>Kickoff</th>
             <th>Team A</th>
             <th>Team B</th>
-            <th>Score</th>
+            <th>Official</th>
+            <th>Manual</th>
+            <th>Actions</th>
             <th>Stage</th>
             <th>Group</th>
             <th>City</th>
-            <th>Country</th>
         </tr>
         </thead>
 
@@ -28,10 +29,9 @@
             </td>
 
             <td th:text="${m.teamA}">Team A</td>
-
             <td th:text="${m.teamB}">Team B</td>
 
-            <td>
+            <td class="score-cell">
                 <span th:if="${m.scoreA != null and m.scoreB != null}"
                       th:text="${m.scoreA + ' - ' + m.scoreB}">
                     0 - 0
@@ -39,18 +39,52 @@
                 <span th:if="${m.scoreA == null or m.scoreB == null}">-</span>
             </td>
 
+            <td>
+                <form th:action="@{/tournaments/{tid}/matches/{mid}/manual-score(tid=${selectedTournamentId}, mid=${m.id})}"
+                      method="post"
+                      class="score-form">
+
+                    <input type="number"
+                           name="manualScoreA"
+                           min="0"
+                           class="score-input"
+                           th:value="${m.manualScoreA}">
+
+                    <span class="score-separator">-</span>
+
+                    <input type="number"
+                           name="manualScoreB"
+                           min="0"
+                           class="score-input"
+                           th:value="${m.manualScoreB}">
+
+                    <button type="submit" class="score-btn">
+                        Save
+                    </button>
+
+                </form>
+            </td>
+
+            <td>
+                <form th:action="@{/tournaments/{tid}/matches/{mid}/validate-manual(tid=${selectedTournamentId}, mid=${m.id})}"
+                      method="post"
+                      class="inline-action-form">
+
+                    <button type="submit"
+                            class="score-btn validate"
+                            th:disabled="${m.manualScoreA == null or m.manualScoreB == null}">
+                        Validate
+                    </button>
+
+                </form>
+            </td>
+
             <td th:text="${m.stage}">Group Stage</td>
             <td th:text="${m.groupName}">A</td>
             <td th:text="${m.venueCity}">City</td>
-            <td th:text="${m.venueCountry}">Country</td>
         </tr>
         </tbody>
     </table>
-
-    <div th:if="${activeTab == 'matches' and (matches == null or matches.isEmpty())}"
-         class="empty-box">
-        Nu există meciuri pentru acest turneu.
-    </div>
 
 </div>
 

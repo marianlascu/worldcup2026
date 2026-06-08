@@ -21,6 +21,9 @@ public class Tournament {
 
     @Column(name="active_yn", length=1)
     private String activeYn = "Y";
+    
+    @Column(name = "bg_image")
+    private String bgImage;    
 
     public Long getId() {
         return id;
@@ -57,4 +60,12 @@ public class Tournament {
     public void setActiveYn(String activeYn) {
         this.activeYn = activeYn;
     }
+    
+    public String getBgImage() {
+        return bgImage;
+    }
+
+    public void setBgImage(String bgImage) {
+        this.bgImage = bgImage;
+    }    
 }

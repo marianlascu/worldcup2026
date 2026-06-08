@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sport Predictor - League</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/layout :: appLayout(
+        ${league.name},
+        'leagues',
+        ~{::content}
+    )}">
+
+    <div th:fragment="content">
+
+        <section class="card">
+            <h2 th:text="${league.name}">League name</h2>
+
+            <p>
+                Code:
+                <strong th:text="${league.code}">L-12345678</strong>
+            </p>
+
+            <form th:if="${canEditLeague}"
+                  method="post"
+                  th:action="@{/leagues/{id}/rename(id=${league.id})}"
+                  class="league-form">
+
+                <div>
+                    <label>Edit league name</label>
+                    <input type="text"
+                           name="name"
+                           required
+                           th:value="${league.name}">
+                </div>
+
+                <button type="submit">Save name</button>
+            </form>
+
+            <div class="quick-grid">
+
+                <div class="quick-card">
+                    <strong>Predictions</strong>
+                    <span>Coming soon</span>
+                </div>
+
+                <div class="quick-card">
+                    <strong>Rankings</strong>
+                    <span>Coming soon</span>
+                </div>
+
+                <div class="quick-card">
+                    <strong>Members</strong>
+                    <span th:text="${#lists.size(members)} + ' players'">1 player</span>
+                </div>
+
+                <div class="quick-card">
+                    <strong>Settings</strong>
+                    <span>Coming soon</span>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>Members</h3>
+            <div th:if="${canEditLeague}" class="card">
+
+                <h3>Add member</h3>
+
+                <form method="post"
+                      th:action="@{/leagues/{id}/members/add(id=${league.id})}">
+
+                    <input type="text"
+                           name="username"
+                           placeholder="username"
+                           required>
+
+                    <button type="submit">
+                        Add Member
+                    </button>
+
+                </form>
+
+            </div>
+            <table class="simple-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="m : ${members}">
+                    <td th:text="${m.fullName}">Marian</td>
+                    <td th:text="${m.username}">marian</td>
+                    <td th:text="${m.role}">OWNER</td>
+                    <td th:text="${#temporals.format(m.joinedAt, 'dd.MM.yyyy HH:mm')}">
+                        08.06.2026 19:30
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(members)}">
+                    <td colspan="4">No members yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

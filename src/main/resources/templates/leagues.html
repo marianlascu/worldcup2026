@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>World Cup 2026 - Leagues</title>
+    <title>Sport Predictor - Leagues</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
@@ -21,27 +21,77 @@
             <h2>Leagues</h2>
 
             <p>
-                Aici vom crea ligi și vom adăuga players în fiecare ligă.
+                Create prediction leagues for a selected tournament.
             </p>
 
-            <div class="quick-grid">
+            <form method="post" th:action="@{/leagues/create}" class="league-form">
 
-                <div class="quick-card">
-                    <strong>Family League</strong>
-                    <span>8 players</span>
+                <div>
+                    <label>League name</label>
+                    <input type="text"
+                           name="name"
+                           required
+                           placeholder="Friends League">
                 </div>
 
-                <div class="quick-card">
-                    <strong>Office League</strong>
-                    <span>12 players</span>
+                <div>
+                    <label>Tournament</label>
+                    <select name="tournamentId" required>
+                        <option value="">Choose tournament</option>
+                        <option th:each="t : ${tournaments}"
+                                th:value="${t.id}"
+                                th:text="${t.name}">
+                            World Cup 2026
+                        </option>
+                    </select>
                 </div>
 
-                <div class="quick-card">
-                    <strong>Friends League</strong>
-                    <span>6 players</span>
-                </div>
+                <button type="submit">Create League</button>
 
-            </div>
+            </form>
+
+        </section>
+
+        <section class="card">
+            <h3>My leagues</h3>
+
+            <table class="simple-table">
+                <thead>
+                <tr>
+                    <th>League</th>
+                    <th>Code</th>
+                    <th>Tournament</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="m : ${myLeagues}">
+                    <td>
+                        <a th:href="@{/leagues/{id}(id=${m.leagueId})}"
+                           th:text="${m.leagueName}">
+                            Friends League
+                        </a>
+                    </td>
+
+                    <td th:text="${m.leagueCode}">
+                        L-12345678
+                    </td>
+
+                    <td th:text="${m.tournamentName}">
+                        World Cup 2026
+                    </td>
+
+                    <td th:text="${m.memberRole}">
+                        OWNER
+                    </td>
+
+                    <td th:text="${#temporals.format(m.joinedAt, 'dd.MM.yyyy HH:mm')}">
+                        08.06.2026 19:30
+                    </td>
+                </tr>
+            </table>
 
         </section>
 

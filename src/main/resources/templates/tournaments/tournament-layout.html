@@ -33,20 +33,7 @@
 
             <div class="tournament-body">
 
-                <div th:if="${activeTab == 'overview'}"
-                     th:replace="~{tournaments/tournament-overview :: content}">
-                </div>
-
-                <div th:if="${activeTab == 'matches'}"
-                     th:replace="~{tournaments/tournament-matches :: content}">
-                </div>
-
-                <div th:if="${activeTab == 'tables'}"
-                     th:replace="~{tournaments/tournament-tables :: content}">
-                </div>
-
-                <div th:if="${activeTab == 'teams'}"
-                     th:replace="~{tournaments/tournament-teams :: content}">
+                <div th:replace="~{__${contentFragment}__}">
                 </div>
 
             </div>

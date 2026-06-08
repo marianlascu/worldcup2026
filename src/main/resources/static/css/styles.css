@@ -4,7 +4,7 @@ body {
     min-height: 100vh;
     background:
         linear-gradient(rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.72)),
-        url("/img/worldcup-bg.png") center center / cover no-repeat fixed;
+        url("/img/app-logo-bg.png") center center / cover no-repeat fixed;
     color: #ffffff;
 }
 
@@ -93,6 +93,9 @@ button {
 .app-layout {
     display: flex;
     min-height: 100vh;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .side-menu {
@@ -268,6 +271,9 @@ body {
     height: 100vh;
     min-height: 100vh;
     overflow: hidden;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;    
 }
 
 .side-menu {
@@ -333,4 +339,599 @@ table thead th {
     z-index: 5;
 }
 
+/* =========================================================
+   TOURNAMENT TABLES
+   ========================================================= */
 
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(360px, 1fr));
+    gap: 16px;
+}
+
+.group-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.group-title {
+    background: rgba(255, 216, 107, 0.92);
+    color: #111;
+    font-weight: bold;
+    padding: 8px 12px;
+}
+
+.group-table {
+    width: 100%;
+    font-size: 13px;
+}
+
+.group-table th,
+.group-table td {
+    padding: 6px 7px;
+    text-align: center;
+}
+
+.group-table .team-name {
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.group-table .points {
+    font-weight: bold;
+}
+
+@media (max-width: 1100px) {
+    .groups-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   TOURNAMENT TEAMS
+   ========================================================= */
+
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.team-group-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.team-list {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.team-pill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+
+    padding: 7px 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.team-flag {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.team-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1200px) {
+    .teams-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .teams-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   TOURNAMENT TABLES - FLAGS + QUALIFICATION COLORS
+   ========================================================= */
+
+.group-table .team-cell {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.team-flag-small {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.team-name-table {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.group-table .pos-cell {
+    font-weight: bold;
+}
+
+.group-table .qualified-row {
+    background: rgba(50, 180, 90, 0.22);
+}
+
+.group-table .qualified-row:hover {
+    background: rgba(80, 220, 120, 0.36);
+}
+
+.group-table .normal-row {
+    background: rgba(255, 255, 255, 0.94);
+}
+
+.group-table .normal-row:hover {
+    background: #fff3c4;
+}
+
+.group-table .points {
+    font-weight: bold;
+    color: #0b3d1b;
+}
+
+/* =========================================================
+   TOURNAMENT MATCHES - MANUAL SCORE CRUD
+   ========================================================= */
+
+.matches-table {
+    font-size: 13px;
+}
+
+.matches-table th,
+.matches-table td {
+    padding: 6px 7px;
+    vertical-align: middle;
+}
+
+.score-cell {
+    text-align: center;
+    font-weight: bold;
+}
+
+.score-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+}
+
+.score-input {
+    width: 46px;
+    min-width: 46px;
+    padding: 4px 5px;
+    margin: 0;
+    text-align: center;
+}
+
+.score-separator {
+    color: #111;
+    font-weight: bold;
+}
+
+.score-btn {
+    width: auto;
+    padding: 5px 8px;
+    margin: 0;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.score-btn.validate {
+    background: #44c767;
+    color: #111;
+}
+
+.score-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.inline-action-form {
+    margin: 0;
+}
+
+/* =========================================================
+   TOURNAMENT KNOCK-OUT BRACKET
+   ========================================================= */
+
+.ko-bracket {
+    display: grid;
+    grid-template-columns: 1fr 260px 1fr;
+    gap: 24px;
+    align-items: center;
+    min-width: 1280px;
+    padding: 12px;
+}
+
+.ko-side {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 18px;
+    align-items: center;
+}
+
+.ko-right {
+    direction: initial;
+}
+
+.ko-right .ko-column,
+.ko-right .ko-card {
+    direction: initial;
+}
+
+.ko-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ko-column-spaced {
+    gap: 34px;
+}
+
+.ko-column-spaced-more {
+    gap: 76px;
+}
+
+.ko-column-semi {
+    gap: 150px;
+}
+
+.ko-round-title {
+    text-align: center;
+    color: #ffd86b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.ko-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 520px;
+}
+
+.ko-trophy {
+    font-size: 108px;
+    filter: drop-shadow(0 0 18px rgba(255, 216, 107, 0.55));
+}
+
+.ko-final-title {
+    color: #ffd86b;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ko-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(5, 15, 30, 0.92), rgba(10, 35, 65, 0.86));
+    border: 1px solid rgba(255, 216, 107, 0.34);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
+    min-height: 104px;
+}
+
+.ko-card::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    width: 18px;
+    height: 1px;
+    background: rgba(255, 216, 107, 0.45);
+}
+
+.ko-right .ko-card::after {
+    right: auto;
+    left: -18px;
+}
+
+.ko-center .ko-card::after {
+    display: none;
+}
+
+.ko-card-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.ko-team-row {
+    display: grid;
+    grid-template-columns: 1fr 28px;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
+    padding: 7px 8px;
+    margin-top: 6px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.ko-team-row strong {
+    text-align: center;
+    color: #ffd86b;
+    font-size: 16px;
+}
+
+.ko-card-meta {
+    margin-top: 8px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 11px;
+}
+
+@media (max-width: 1400px) {
+    .ko-bracket {
+        min-width: 1100px;
+        grid-template-columns: 1fr 220px 1fr;
+    }
+
+    .ko-side {
+        grid-template-columns: repeat(4, minmax(155px, 1fr));
+        gap: 14px;
+    }
+}
+
+.ko-bracket {
+    transform: scale(0.64);
+    transform-origin: top left;
+    width: 156%;
+}
+
+.tournament-body {
+    overflow: auto;
+}
+
+.ko-bracket-slots .ko-slot-column {
+    display: grid;
+    grid-template-rows: repeat(16, 58px);
+    gap: 0;
+    align-items: center;
+}
+
+.ko-bracket-slots .ko-card {
+    min-height: 88px;
+    padding: 7px;
+}
+
+.ko-bracket {
+    transform: scale(0.68);
+    transform-origin: top left;
+    width: 147%;
+}
+
+.tournament-body {
+    overflow: auto;
+}
+
+/* =========================================================
+   TOURNAMENT KNOCK-OUT CONNECTORS FIX
+   ========================================================= */
+
+.ko-bracket {
+    transform: scale(0.62);
+    transform-origin: top left;
+    width: 162%;
+}
+
+.ko-bracket-slots .ko-slot-column {
+    display: grid;
+    grid-template-rows: repeat(16, 66px);
+    gap: 0;
+    align-items: center;
+}
+
+.ko-bracket-slots .ko-card {
+    min-height: 82px;
+    padding: 7px;
+}
+
+/* remove old simple unfinished lines */
+.ko-card::after {
+    display: none;
+}
+
+/* connector geometry */
+.ko-col-r32 {
+    --ko-pair-h: 132px;
+}
+
+.ko-col-r16 {
+    --ko-pair-h: 264px;
+}
+
+.ko-col-qf {
+    --ko-pair-h: 528px;
+}
+
+/* LEFT SIDE: pair bracket connectors */
+.ko-left .ko-col-r32 .ko-card:nth-child(even)::before,
+.ko-left .ko-col-r16 .ko-card:nth-child(even)::before,
+.ko-left .ko-col-qf .ko-card:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -42px;
+    width: 42px;
+    height: var(--ko-pair-h);
+    pointer-events: none;
+
+    background:
+        linear-gradient(#ffd86b, #ffd86b) 0 0 / 22px 2px no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 0 100% / 22px 2px no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 22px 0 / 2px 100% no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 22px 50% / 20px 2px no-repeat;
+}
+
+/* RIGHT SIDE: mirrored pair bracket connectors */
+.ko-right .ko-col-r32 .ko-card:nth-child(even)::before,
+.ko-right .ko-col-r16 .ko-card:nth-child(even)::before,
+.ko-right .ko-col-qf .ko-card:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -42px;
+    width: 42px;
+    height: var(--ko-pair-h);
+    pointer-events: none;
+
+    background:
+        linear-gradient(#ffd86b, #ffd86b) 20px 0 / 22px 2px no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 20px 100% / 22px 2px no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 20px 0 / 2px 100% no-repeat,
+        linear-gradient(#ffd86b, #ffd86b) 0 50% / 22px 2px no-repeat;
+}
+
+/* SF to Final */
+.ko-left .ko-col-sf .ko-card::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -42px;
+    width: 42px;
+    height: 2px;
+    background: #ffd86b;
+}
+
+.ko-right .ko-col-sf .ko-card::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -42px;
+    width: 42px;
+    height: 2px;
+    background: #ffd86b;
+}
+
+/* stronger trophy */
+.ko-trophy {
+    font-size: 200px;
+    filter: drop-shadow(0 0 24px rgba(255, 216, 107, 0.85));
+}
+
+.tournament-body {
+    overflow: auto;
+}
+
+/* =========================================================
+   TOURNAMENT KNOCK-OUT R32 SPACING FIX
+   ========================================================= */
+
+.ko-bracket {
+    transform: scale(0.68);
+    transform-origin: top left;
+    width: 172%;
+}
+
+.ko-bracket-slots .ko-slot-column {
+    display: grid;
+    gap: 0;
+    align-items: center;
+}
+
+/* R32 are carduri dese si text lung */
+.ko-bracket-slots .ko-col-r32 {
+    grid-template-rows: repeat(16, 98px);
+}
+
+/* Rundele urmatoare stau pe aceeasi geometrie, dar cu sloturi mai largi */
+.ko-bracket-slots .ko-col-r16,
+.ko-bracket-slots .ko-col-qf,
+.ko-bracket-slots .ko-col-sf {
+    grid-template-rows: repeat(16, 100px);
+    margin-left: 30px;
+}
+
+.ko-bracket-slots .ko-card {
+    min-height: 88px;
+    padding: 6px;
+}
+
+.ko-bracket-slots .ko-col-r32 .ko-card {
+    min-height: 104px;
+}
+
+/* text mai compact in carduri */
+.ko-team-row {
+    min-height: 30px;
+    padding: 5px 7px;
+}
+
+.ko-team-row span {
+    font-size: 12px;
+    line-height: 1.12;
+    display: block;
+    max-height: 28px;
+    overflow: hidden;
+}
+
+.ko-card-head {
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.ko-card-meta {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+/* recalibrare linii dupa noua inaltime R32 */
+.ko-col-r32 {
+    --ko-pair-h: 236px;
+}
+
+.ko-col-r16 {
+    --ko-pair-h: 236px;
+}
+
+.ko-col-qf {
+    --ko-pair-h: 472px;
+}
+
+.tournament-body {
+    overflow: auto;
+}

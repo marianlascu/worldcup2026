@@ -3,6 +3,66 @@
 <body>
 
 <div th:fragment="content">
+
+    <div class="groups-grid">
+
+        <div class="group-card" th:each="group : ${groups}">
+
+            <div class="group-title">
+                <span th:text="${group.name}">Group A</span>
+            </div>
+
+            <table class="group-table">
+                <thead>
+                <tr>
+                    <th>Loc</th>
+                    <th>Team</th>
+                    <th>P</th>
+                    <th>W</th>
+                    <th>D</th>
+                    <th>L</th>
+                    <th>GS</th>
+                    <th>GA</th>
+                    <th>GD</th>
+                    <th>Pts</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="row : ${group.rows}"
+                    th:class="${row.position <= 2} ? 'qualified-row' : 'normal-row'">
+
+                    <td class="pos-cell" th:text="${row.position}">1</td>
+
+                    <td class="team-cell">
+                        <span class="team-flag-small"
+                              th:text="${row.flagEmoji}">
+                            🇲🇽
+                        </span>
+
+                        <span class="team-name-table"
+                              th:text="${row.teamName}">
+                            Mexico
+                        </span>
+                    </td>
+
+                    <td th:text="${row.played}">0</td>
+                    <td th:text="${row.wins}">0</td>
+                    <td th:text="${row.draws}">0</td>
+                    <td th:text="${row.losses}">0</td>
+                    <td th:text="${row.goalsScored}">0</td>
+                    <td th:text="${row.goalsAgainst}">0</td>
+                    <td th:text="${row.goalsDiff}">0</td>
+                    <td class="points" th:text="${row.points}">0</td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
 
 </body>
