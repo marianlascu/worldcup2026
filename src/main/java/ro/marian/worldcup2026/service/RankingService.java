@@ -1,13 +1,13 @@
 package ro.marian.worldcup2026.service;
 
 import org.springframework.stereotype.Service;
+import ro.marian.worldcup2026.dto.PredictionMatrixCell;
 import ro.marian.worldcup2026.dto.RankingPredictionMatrixRow;
 import ro.marian.worldcup2026.dto.RankingRow;
 import ro.marian.worldcup2026.model.MatchGame;
 import ro.marian.worldcup2026.model.Prediction;
 import ro.marian.worldcup2026.repository.MatchGameRepository;
 import ro.marian.worldcup2026.repository.PredictionRepository;
-import ro.marian.worldcup2026.dto.PredictionMatrixCell;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -73,7 +73,11 @@ public class RankingService {
 
             row.setPoints(row.getPoints() + points);
 
-            if (points == 3) {
+            if (points == 4) {
+                row.setExact4(row.getExact4() + 1);
+                row.setExactScores(row.getExactScores() + 1);
+            } else if (points == 3) {
+                row.setExact3(row.getExact3() + 1);
                 row.setExactScores(row.getExactScores() + 1);
             } else if (points == 1) {
                 row.setCorrectResults(row.getCorrectResults() + 1);
@@ -84,7 +88,8 @@ public class RankingService {
                 .stream()
                 .sorted(
                         Comparator.comparing(RankingRow::getPoints).reversed()
-                                .thenComparing(RankingRow::getExactScores, Comparator.reverseOrder())
+                                .thenComparing(RankingRow::getExact4, Comparator.reverseOrder())
+                                .thenComparing(RankingRow::getExact3, Comparator.reverseOrder())
                                 .thenComparing(RankingRow::getCorrectResults, Comparator.reverseOrder())
                                 .thenComparing(RankingRow::getPlayer, String.CASE_INSENSITIVE_ORDER)
                 )
@@ -149,20 +154,44 @@ public class RankingService {
             for (Long userId : userIds) {
                 Prediction p = predictionMap.get(m.getId() + "::" + userId);
 
-                String visibleValue;
+                String visibleValue = "X";
+                Integer cellPoints = null;
+                String cellClass = "pred-missing";
 
-                if (p == null
-                        || p.getPredictedScoreA() == null
-                        || p.getPredictedScoreB() == null) {
-                    visibleValue = "X";
-                } else {
+                if (p != null
+                        && p.getPredictedScoreA() != null
+                        && p.getPredictedScoreB() != null) {
+
                     boolean ownPrediction = currentUserId != null && currentUserId.equals(userId);
                     boolean canSee = admin || started || ownPrediction;
 
                     if (canSee) {
                         visibleValue = p.getPredictedScoreA() + "-" + p.getPredictedScoreB();
+
+                        if (m.getScoreA() != null && m.getScoreB() != null) {
+                            cellPoints = calculatePoints(
+                                    p.getPredictedScoreA(),
+                                    p.getPredictedScoreB(),
+                                    m.getScoreA(),
+                                    m.getScoreB()
+                            );
+
+                            if (cellPoints == 4) {
+                                cellClass = "pred-score-4";
+                            } else if (cellPoints == 3) {
+                                cellClass = "pred-score-3";
+                            } else if (cellPoints == 1) {
+                                cellClass = "pred-score-1";
+                            } else {
+                                cellClass = "pred-score-0";
+                            }
+                        } else {
+                            cellClass = "pred-visible";
+                        }
+
                     } else {
                         visibleValue = "P";
+                        cellClass = "pred-hidden";
                     }
                 }
 
@@ -170,8 +199,8 @@ public class RankingService {
                         safePlayer(userId),
                         new PredictionMatrixCell(
                                 visibleValue,
-                                null,
-                                "pred-hidden"
+                                cellPoints,
+                                cellClass
                         )
                 );
             }
@@ -183,16 +212,34 @@ public class RankingService {
         return rows;
     }
 
-    private int calculatePoints(int predA, int predB, int realA, int realB) {
-        if (predA == realA && predB == realB) {
-            return 3;
-        }
+private int calculatePoints(int predA, int predB, int realA, int realB) {
+    if (predA == realA && predB == realB) {
+        int totalGoals = realA + realB;
+        int pts = totalGoals > 3 ? 4 : 3;
 
-        int predSign = Integer.compare(predA, predB);
-        int realSign = Integer.compare(realA, realB);
+        System.out.println("PREDICTOR SCORE DEBUG: exact "
+                + predA + "-" + predB
+                + " / real "
+                + realA + "-" + realB
+                + " / goals=" + totalGoals
+                + " / points=" + pts);
 
-        return predSign == realSign ? 1 : 0;
+        return pts;
     }
+
+    int predSign = Integer.compare(predA, predB);
+    int realSign = Integer.compare(realA, realB);
+
+    int pts = predSign == realSign ? 1 : 0;
+
+    System.out.println("PREDICTOR SCORE DEBUG: pred "
+            + predA + "-" + predB
+            + " / real "
+            + realA + "-" + realB
+            + " / points=" + pts);
+
+    return pts;
+}
 
     private String safePlayer(Long userId) {
         return userId == null ? "User ?" : "User " + userId;

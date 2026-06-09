@@ -3,8 +3,8 @@ package ro.marian.worldcup2026.dto;
 public class PredictionMatrixCell {
 
     private String value;      // 2-1, P, X
-    private Integer points;    // 3, 1, 0 sau null
-    private String cssClass;   // pred-3, pred-1, pred-0, pred-hidden, pred-missing
+    private Integer points;    // 4, 3, 1, 0 sau null
+    private String cssClass;   // pred-score-4, pred-score-3, pred-score-1, pred-score-0, pred-hidden
 
     public PredictionMatrixCell() {
     }

@@ -23,6 +23,30 @@
 
             <div class="side-spacer"></div>
 
+            <div class="side-ranking"
+                 th:if="${sidebarRankings != null && !#lists.isEmpty(sidebarRankings)}">
+
+                <div class="side-ranking-title">League ranking</div>
+
+                <div class="side-ranking-row"
+                     th:each="r, it : ${sidebarRankings}"
+                     th:if="${it.index < 8}">
+
+                    <span class="side-rank-pos" th:text="${it.index + 1}">1</span>
+
+                    <span class="side-rank-name"
+                          th:text="${r.fullName}">
+                        Marian
+                    </span>
+
+                    <span class="side-rank-points"
+                          th:text="${r.points}">
+                        12
+                    </span>
+                </div>
+
+            </div>
+
             <a class="side-tab logout" href="/logout">Logout</a>
 
         </aside>

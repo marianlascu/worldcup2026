@@ -574,7 +574,9 @@ public class LeaguesController {
 
         AppUser user = usersById.get(member.getUserId());
 
-        int predictionsCount = 0;
+        int correctTotal = 0;
+        int exact4 = 0;
+        int exact3 = 0;
         int exactScoreCount = 0;
         int resultCount = 0;
         int points = 0;
@@ -599,25 +601,28 @@ public class LeaguesController {
                 continue;
             }
 
-            predictionsCount++;
+            int gained = predictionPoints(
+                    p.getPredictedScoreA(),
+                    p.getPredictedScoreB(),
+                    match.getScoreA(),
+                    match.getScoreB()
+            );
 
-            boolean exact =
-                    p.getPredictedScoreA().equals(match.getScoreA())
-                            && p.getPredictedScoreB().equals(match.getScoreB());
-
-            if (exact) {
-                exactScoreCount++;
-                points += 3;
+            if (gained <= 0) {
                 continue;
             }
 
-            boolean sameResult =
-                    resultSign(p.getPredictedScoreA(), p.getPredictedScoreB())
-                            == resultSign(match.getScoreA(), match.getScoreB());
+            correctTotal++;
+            points += gained;
 
-            if (sameResult) {
+            if (gained == 4) {
+                exact4++;
+                exactScoreCount++;
+            } else if (gained == 3) {
+                exact3++;
+                exactScoreCount++;
+            } else if (gained == 1) {
                 resultCount++;
-                points += 1;
             }
         }
 
@@ -625,7 +630,9 @@ public class LeaguesController {
                 member.getUserId(),
                 user == null ? "" : user.getUsername(),
                 user == null ? "(missing user)" : user.getFullName(),
-                predictionsCount,
+                correctTotal,
+                exact4,
+                exact3,
                 exactScoreCount,
                 resultCount,
                 points
@@ -691,45 +698,50 @@ public class LeaguesController {
 
                 Prediction prediction = predictionsByMatchAndUser.get(match.getId() + "::" + userId);
 
-            PredictionMatrixCell cell;
+                PredictionMatrixCell cell;
 
-            if (prediction == null
-                    || prediction.getPredictedScoreA() == null
-                    || prediction.getPredictedScoreB() == null) {
+                if (prediction == null
+                        || prediction.getPredictedScoreA() == null
+                        || prediction.getPredictedScoreB() == null) {
 
-                cell = new PredictionMatrixCell("X", null, "pred-missing");
+                    cell = new PredictionMatrixCell("X", null, "pred-missing");
 
-            } else {
-                boolean ownPrediction = currentUserId != null && currentUserId.equals(userId);
-                boolean canSee = admin || started || ownPrediction;
-
-                Integer points = null;
-                String cssClass = "pred-hidden";
-
-                if (match.getScoreA() != null && match.getScoreB() != null) {
-                    points = predictionPoints(
-                            prediction.getPredictedScoreA(),
-                            prediction.getPredictedScoreB(),
-                            match.getScoreA(),
-                            match.getScoreB()
-                    );
-
-                    cssClass = switch (points) {
-                        case 3 -> "pred-3";
-                        case 1 -> "pred-1";
-                        default -> "pred-0";
-                    };
-                }
-
-                if (canSee) {
-                    String value = prediction.getPredictedScoreA() + "-" + prediction.getPredictedScoreB();
-                    cell = new PredictionMatrixCell(value, points, cssClass);
                 } else {
-                    cell = new PredictionMatrixCell("P", null, "pred-hidden");
-                }
-            }
+                    boolean ownPrediction = currentUserId != null && currentUserId.equals(userId);
+                    boolean canSee = admin || started || ownPrediction;
 
-            playerPredictions.put(playerName, cell);
+                    if (canSee) {
+                        String value = prediction.getPredictedScoreA()
+                                + "-"
+                                + prediction.getPredictedScoreB();
+
+                        Integer points = null;
+                        String cssClass = "pred-visible";
+
+                        if (match.getScoreA() != null && match.getScoreB() != null) {
+                            points = predictionPoints(
+                                    prediction.getPredictedScoreA(),
+                                    prediction.getPredictedScoreB(),
+                                    match.getScoreA(),
+                                    match.getScoreB()
+                            );
+
+                            cssClass = switch (points) {
+                                case 4 -> "pred-score-4";
+                                case 3 -> "pred-score-3";
+                                case 1 -> "pred-score-1";
+                                default -> "pred-score-0";
+                            };
+                        }
+
+                        cell = new PredictionMatrixCell(value, points, cssClass);
+
+                    } else {
+                        cell = new PredictionMatrixCell("P", null, "pred-hidden");
+                    }
+                }
+
+                playerPredictions.put(playerName, cell);
             }
 
             row.setPlayerPredictions(playerPredictions);
@@ -741,10 +753,14 @@ public class LeaguesController {
     
     private int predictionPoints(int predA, int predB, int realA, int realB) {
         if (predA == realA && predB == realB) {
-            return 3;
+            int totalGoals = realA + realB;
+            return totalGoals > 3 ? 4 : 3;
         }
 
-        return Integer.compare(predA, predB) == Integer.compare(realA, realB) ? 1 : 0;
+        int predSign = Integer.compare(predA, predB);
+        int realSign = Integer.compare(realA, realB);
+
+        return predSign == realSign ? 1 : 0;
     }    
     
     private String compactStage(MatchGame match) {

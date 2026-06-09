@@ -12,8 +12,8 @@
 
         <!-- LEFT: Rankings compact 30% -->
         <section class="card league-inline-card"
-                 style="flex:0 0 30%;
-                        min-width:280px;
+                 style="flex:0 0 25%;
+                        min-width:240px;
                         padding:8px 10px;
                         overflow:visible !important;
                         max-height:none !important;
@@ -32,8 +32,9 @@
                         <th>#</th>
                         <th>Player</th>
                         <th>Total</th>
-                        <th>Exact</th>
-                        <th>Correct</th>
+                        <th>4pt</th>
+                        <th>3pt</th>
+                        <th>1pt</th>
                         <th>Pts</th>
                     </tr>
                     </thead>
@@ -42,9 +43,10 @@
                     <tr th:each="r, it : ${rankings}">
                         <td th:text="${it.index + 1}">1</td>
                         <td th:text="${r.fullName}">Player</td>
-                        <td th:text="${r.predictionsCount}">0</td>
-                        <td th:text="${r.exactScoreCount}">0</td>
-                        <td th:text="${r.resultCount}">0</td>
+                        <td class="rank-total" th:text="${r.exact4 + r.exact3 + r.resultCount}">0</td>
+                        <td class="rank-exact4" th:text="${r.exact4}">0</td>
+                        <td class="rank-exact3" th:text="${r.exact3}">0</td>
+                        <td class="rank-result" th:text="${r.resultCount}">0</td>
                         <td><strong th:text="${r.points}">0</strong></td>
                     </tr>
 

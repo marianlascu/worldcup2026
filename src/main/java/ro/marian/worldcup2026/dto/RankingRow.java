@@ -7,13 +7,56 @@ public class RankingRow {
     private String fullName;
 
     private int predictions;
+
+    /*
+     * Exact score, total goals > 3
+     */
+    private int exact4;
+
+    /*
+     * Exact score, total goals <= 3
+     */
+    private int exact3;
+
+    /*
+     * Total exact scores (exact4 + exact3)
+     */
     private int exactScores;
+
+    /*
+     * Correct result (1X2)
+     */
     private int correctResults;
+
+    /*
+     * Total ranking points
+     */
     private int points;
 
     public RankingRow() {
     }
 
+    public RankingRow(Long userId,
+                      String username,
+                      String fullName,
+                      int predictions,
+                      int exact4,
+                      int exact3,
+                      int exactScores,
+                      int correctResults,
+                      int points) {
+
+        this.userId = userId;
+        this.username = username;
+        this.fullName = fullName;
+        this.predictions = predictions;
+        this.exact4 = exact4;
+        this.exact3 = exact3;
+        this.exactScores = exactScores;
+        this.correctResults = correctResults;
+        this.points = points;
+    }
+    
     public RankingRow(Long userId,
                       String username,
                       String fullName,
@@ -29,7 +72,10 @@ public class RankingRow {
         this.exactScores = exactScores;
         this.correctResults = correctResults;
         this.points = points;
-    }
+
+        this.exact4 = 0;
+        this.exact3 = exactScores;
+    }    
 
     public Long getUserId() {
         return userId;
@@ -63,6 +109,22 @@ public class RankingRow {
         this.predictions = predictions;
     }
 
+    public int getExact4() {
+        return exact4;
+    }
+
+    public void setExact4(int exact4) {
+        this.exact4 = exact4;
+    }
+
+    public int getExact3() {
+        return exact3;
+    }
+
+    public void setExact3(int exact3) {
+        this.exact3 = exact3;
+    }
+
     public int getExactScores() {
         return exactScores;
     }
@@ -86,7 +148,7 @@ public class RankingRow {
     public void setPoints(int points) {
         this.points = points;
     }
-    
+
     public String getPlayer() {
         return getFullName();
     }
@@ -94,8 +156,8 @@ public class RankingRow {
     public void setPlayer(String player) {
         this.fullName = player;
         this.username = player;
-    }    
-    
+    }
+
     public int getPredictionsCount() {
         return predictions;
     }
@@ -118,6 +180,5 @@ public class RankingRow {
 
     public void setResultCount(int resultCount) {
         this.correctResults = resultCount;
-    }    
-    
+    }
 }
