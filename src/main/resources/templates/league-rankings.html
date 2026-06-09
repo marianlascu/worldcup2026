@@ -4,43 +4,135 @@
 
 <div th:fragment="content">
 
-    <section class="card league-inline-card">
+    <div style="display:flex;
+                gap:12px;
+                width:100%;
+                align-items:flex-start;
+                overflow:visible !important;">
 
-        <h3>Rankings</h3>
+        <!-- LEFT: Rankings compact 30% -->
+        <section class="card league-inline-card"
+                 style="flex:0 0 30%;
+                        min-width:280px;
+                        padding:8px 10px;
+                        overflow:visible !important;
+                        max-height:none !important;
+                        height:auto !important;">
 
-        <table class="simple-table">
-            <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>Username</th>
-                <th>Predictions</th>
-                <th>Exact scores</th>
-                <th>Correct results</th>
-                <th>Points</th>
-            </tr>
-            </thead>
+            <h4 style="margin:0 0 6px 0; font-size:0.95rem;">Rankings</h4>
 
-            <tbody>
-            <tr th:each="r, it : ${rankings}">
-                <td th:text="${it.index + 1}">1</td>
-                <td th:text="${r.fullName}">Player name</td>
-                <td th:text="${r.username}">username</td>
-                <td th:text="${r.predictionsCount}">0</td>
-                <td th:text="${r.exactScoreCount}">0</td>
-                <td th:text="${r.resultCount}">0</td>
-                <td>
-                    <strong th:text="${r.points}">0</strong>
-                </td>
-            </tr>
+            <div class="rankings-scroll"
+                 style="width:100%;
+                        max-height:430px;
+                        overflow:auto !important;
+                        border-radius:10px;">
+                <table class="simple-table rankings-compact-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player</th>
+                        <th>Total</th>
+                        <th>Exact</th>
+                        <th>Correct</th>
+                        <th>Pts</th>
+                    </tr>
+                    </thead>
 
-            <tr th:if="${#lists.isEmpty(rankings)}">
-                <td colspan="7">No ranking data yet.</td>
-            </tr>
-            </tbody>
-        </table>
+                    <tbody>
+                    <tr th:each="r, it : ${rankings}">
+                        <td th:text="${it.index + 1}">1</td>
+                        <td th:text="${r.fullName}">Player</td>
+                        <td th:text="${r.predictionsCount}">0</td>
+                        <td th:text="${r.exactScoreCount}">0</td>
+                        <td th:text="${r.resultCount}">0</td>
+                        <td><strong th:text="${r.points}">0</strong></td>
+                    </tr>
 
-    </section>
+                    <tr th:if="${#lists.isEmpty(rankings)}">
+                        <td colspan="6">No ranking data yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- RIGHT: Prediction analytics 70% -->
+        <section class="card league-inline-card"
+                 style="flex:1 1 70%;
+                        min-width:0;
+                        padding:8px 10px;
+                        overflow:visible !important;
+                        max-height:none !important;
+                        height:auto !important;">
+
+            <h4 style="margin:0 0 6px 0; font-size:0.95rem;">Prediction analytics</h4>
+
+            <div class="matrix-scroll"
+                 style="width:100%;
+                        max-height:430px;
+                        overflow:auto !important;
+                        border-radius:10px;">
+                <table class="league-table prediction-matrix-table">
+                    <thead>
+                    <tr>
+                        <th class="mx-sticky mx-col-no">No</th>
+                        <th class="mx-sticky mx-col-stage">Stage</th>
+                        <th class="mx-sticky mx-col-match">Match</th>
+                        <th class="mx-sticky mx-col-kickoff">Kickoff</th>
+                        <th class="mx-sticky mx-col-official">Official</th>
+
+                        <th th:each="player : ${predictionMatrixPlayers}"
+                            class="mx-player-head"
+                            th:text="${player}">
+                            Player
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:if="${predictionMatrix == null || predictionMatrix.isEmpty()}">
+                        <td colspan="20">No prediction data yet.</td>
+                    </tr>
+
+                    <tr th:each="row : ${predictionMatrix}">
+                        <td class="mx-sticky mx-col-no" th:text="${row.matchNo}">1</td>
+                        <td class="mx-sticky mx-col-stage" th:text="${row.stage}">Gr.A</td>
+
+                        <td class="mx-sticky mx-col-match">
+                            <span th:text="${row.teamA}">Team A</span>
+                            <span> - </span>
+                            <span th:text="${row.teamB}">Team B</span>
+                        </td>
+
+                        <td class="mx-sticky mx-col-kickoff"
+                            th:text="${row.kickoffAt == null ? '-' : #temporals.format(row.kickoffAt, 'dd.MM HH:mm')}">
+                            14.06 21:00
+                        </td>
+
+                        <td class="mx-sticky mx-col-official"
+                            th:text="${row.officialScore}">
+                            -
+                        </td>
+
+                        <td th:each="entry : ${row.playerPredictions}"
+                            class="mx-player-cell"
+                            th:classappend="${entry.value.cssClass}">
+                            <span th:text="${entry.value.value}">2-1</span>
+                            <span class="mx-points"
+                                  th:if="${entry.value.points != null}"
+                                  th:text="${entry.value.points}">
+                                3
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </div>
 
 </div>
 

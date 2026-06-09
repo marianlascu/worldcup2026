@@ -20,6 +20,12 @@ import ro.marian.worldcup2026.repository.MatchGameRepository;
 import ro.marian.worldcup2026.dto.RankingRow;
 import ro.marian.worldcup2026.model.MatchGame;
 import ro.marian.worldcup2026.model.Prediction;
+import ro.marian.worldcup2026.dto.RankingPredictionMatrixRow;
+import ro.marian.worldcup2026.dto.PredictionMatrixCell;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import java.util.List;
 import java.util.Map;
@@ -447,6 +453,32 @@ public class LeaguesController {
                 .toList();
 
         model.addAttribute("rankings", rankings);
+        League league = (League) model.getAttribute("league");
+
+        List<MatchGame> tournamentMatches =
+                matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(
+                        league.getTournamentId()
+                );
+
+        List<RankingPredictionMatrixRow> predictionMatrix =
+                buildPredictionMatrixRows(
+                        members,
+                        usersById,
+                        predictions,
+                        tournamentMatches,
+                        currentUserId(session),
+                        isAdmin(session)
+                );
+
+        model.addAttribute("predictionMatrix", predictionMatrix); 
+        List<String> predictionMatrixPlayers = members.stream()
+                .map(m -> {
+                    AppUser user = usersById.get(m.getUserId());
+                    return user == null ? "User " + m.getUserId() : user.getFullName();
+                })
+                .toList();
+
+        model.addAttribute("predictionMatrixPlayers", predictionMatrixPlayers);        
 
         return view;
     }  
@@ -602,5 +634,157 @@ public class LeaguesController {
 
     private int resultSign(Integer a, Integer b) {
         return Integer.compare(a, b);
+    }    
+    
+    private List<RankingPredictionMatrixRow> buildPredictionMatrixRows(
+            List<LeagueMember> members,
+            Map<Long, AppUser> usersById,
+            List<Prediction> predictions,
+            List<MatchGame> matches,
+            Long currentUserId,
+            boolean admin
+    ) {
+        Map<String, Prediction> predictionsByMatchAndUser = predictions.stream()
+                .filter(p -> p.getMatchId() != null)
+                .filter(p -> p.getUserId() != null)
+                .collect(Collectors.toMap(
+                        p -> p.getMatchId() + "::" + p.getUserId(),
+                        p -> p,
+                        (a, b) -> b
+                ));
+
+        LocalDateTime now = LocalDateTime.now();
+        List<RankingPredictionMatrixRow> rows = new ArrayList<>();
+
+        for (MatchGame match : matches) {
+            RankingPredictionMatrixRow row = new RankingPredictionMatrixRow();
+
+            row.setMatchId(match.getId());
+            row.setMatchNo(match.getMatchNo());
+            row.setStage(compactStage(match));
+            row.setGroupName(match.getGroupName());
+            row.setTeamA(match.getTeamA());
+            row.setTeamB(match.getTeamB());
+            row.setKickoffAt(match.getKickoffAt());
+
+            row.setOfficialScoreA(match.getScoreA());
+            row.setOfficialScoreB(match.getScoreB());
+
+            if (match.getScoreA() != null && match.getScoreB() != null) {
+                row.setOfficialScore(match.getScoreA() + "-" + match.getScoreB());
+            } else {
+                row.setOfficialScore("-");
+            }
+
+            boolean started = match.getKickoffAt() != null && !match.getKickoffAt().isAfter(now);
+            row.setStarted(started);
+
+            Map<String, PredictionMatrixCell> playerPredictions = new LinkedHashMap<>();
+
+            for (LeagueMember member : members) {
+                Long userId = member.getUserId();
+                AppUser user = usersById.get(userId);
+
+                String playerName = user == null
+                        ? "User " + userId
+                        : user.getFullName();
+
+                Prediction prediction = predictionsByMatchAndUser.get(match.getId() + "::" + userId);
+
+            PredictionMatrixCell cell;
+
+            if (prediction == null
+                    || prediction.getPredictedScoreA() == null
+                    || prediction.getPredictedScoreB() == null) {
+
+                cell = new PredictionMatrixCell("X", null, "pred-missing");
+
+            } else {
+                boolean ownPrediction = currentUserId != null && currentUserId.equals(userId);
+                boolean canSee = admin || started || ownPrediction;
+
+                Integer points = null;
+                String cssClass = "pred-hidden";
+
+                if (match.getScoreA() != null && match.getScoreB() != null) {
+                    points = predictionPoints(
+                            prediction.getPredictedScoreA(),
+                            prediction.getPredictedScoreB(),
+                            match.getScoreA(),
+                            match.getScoreB()
+                    );
+
+                    cssClass = switch (points) {
+                        case 3 -> "pred-3";
+                        case 1 -> "pred-1";
+                        default -> "pred-0";
+                    };
+                }
+
+                if (canSee) {
+                    String value = prediction.getPredictedScoreA() + "-" + prediction.getPredictedScoreB();
+                    cell = new PredictionMatrixCell(value, points, cssClass);
+                } else {
+                    cell = new PredictionMatrixCell("P", null, "pred-hidden");
+                }
+            }
+
+            playerPredictions.put(playerName, cell);
+            }
+
+            row.setPlayerPredictions(playerPredictions);
+            rows.add(row);
+        }
+
+        return rows;
+    }   
+    
+    private int predictionPoints(int predA, int predB, int realA, int realB) {
+        if (predA == realA && predB == realB) {
+            return 3;
+        }
+
+        return Integer.compare(predA, predB) == Integer.compare(realA, realB) ? 1 : 0;
+    }    
+    
+    private String compactStage(MatchGame match) {
+        if (match == null) {
+            return "";
+        }
+
+        String stage = match.getStage() == null ? "" : match.getStage().trim();
+        String groupName = match.getGroupName() == null ? "" : match.getGroupName().trim();
+
+        if (!groupName.isBlank()) {
+            return "Gr." + groupName;
+        }
+
+        String s = stage.toLowerCase();
+
+        if (s.contains("round of 32") || s.contains("r32")) {
+            return "R32";
+        }
+
+        if (s.contains("round of 16") || s.contains("r16")) {
+            return "R16";
+        }
+
+        if (s.contains("quarter")) {
+            return "QF";
+        }
+
+        if (s.contains("semi")) {
+            return "SF";
+        }
+
+        if (s.contains("final")) {
+            return "F";
+        }
+
+        if (s.contains("third")) {
+            return "3rd";
+        }
+
+        return stage;
     }    
 }
