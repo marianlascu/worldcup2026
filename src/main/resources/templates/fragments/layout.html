@@ -6,8 +6,8 @@
 <div th:fragment="appLayout(pageTitle, activeTab, content)">
 
     <div class="app-layout"
-         th:style="${pageBgImage != null} ? 
-                   'background-image: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.72)), url(/img/' + ${pageBgImage} + ')' 
+         th:style="${pageBgImage != null} ?
+                   'background-image: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.72)), url(/img/' + ${pageBgImage} + ')'
                    : null">
 
         <aside class="side-menu">
@@ -21,31 +21,92 @@
             <a th:class="${activeTab == 'leagues'} ? 'side-tab active' : 'side-tab'" href="/leagues">Leagues</a>
             <a th:class="${activeTab == 'players'} ? 'side-tab active' : 'side-tab'" href="/players">Players</a>
 
-            <div class="side-spacer"></div>
+            <div class="side-live-panel"
+                 th:if="${livePanel != null and !livePanel.empty}">
 
-            <div class="side-ranking"
-                 th:if="${sidebarRankings != null && !#lists.isEmpty(sidebarRankings)}">
+                <div class="side-live-title">
+                    LIVE NOW
+                </div>
 
-                <div class="side-ranking-title">League ranking</div>
+                <div class="side-live-section"
+                     th:if="${livePanel.pastMatches != null and !livePanel.pastMatches.isEmpty()}">
 
-                <div class="side-ranking-row"
-                     th:each="r, it : ${sidebarRankings}"
-                     th:if="${it.index < 8}">
+                    <div class="side-live-label">Last games</div>
 
-                    <span class="side-rank-pos" th:text="${it.index + 1}">1</span>
+                    <div class="side-live-line"
+                         th:each="m : ${livePanel.pastMatches}">
 
-                    <span class="side-rank-name"
-                          th:text="${r.fullName}">
-                        Marian
-                    </span>
+                        <span class="side-live-no" th:text="${m.matchNo}">1</span>
 
-                    <span class="side-rank-points"
-                          th:text="${r.points}">
-                        12
-                    </span>
+                        <span class="side-live-teams">
+                            <span th:text="${m.teamA}">A</span>
+                            <span>-</span>
+                            <span th:text="${m.teamB}">B</span>
+                        </span>
+
+                        <span class="side-live-score" th:text="${m.scoreText}">2-1</span>
+                    </div>
+                </div>
+
+                <div class="side-live-focus"
+                     th:if="${livePanel.focusMatch != null}"
+                     th:classappend="${livePanel.focusMatch.live} ? ' is-live' : ''">
+
+                    <div class="side-live-label"
+                         th:text="${livePanel.focusMatch.live} ? 'LIVE MATCH' : 'NEXT MATCH'">
+                        NEXT MATCH
+                    </div>
+
+                    <div class="side-live-focus-no"
+                         th:text="'Match ' + ${livePanel.focusMatch.matchNo}">
+                        Match 1
+                    </div>
+
+                    <div class="side-live-focus-teams">
+                        <span th:text="${livePanel.focusMatch.teamA}">Team A</span>
+                        <span> - </span>
+                        <span th:text="${livePanel.focusMatch.teamB}">Team B</span>
+                    </div>
+
+                    <div class="side-live-focus-score"
+                         th:if="${livePanel.focusMatch.live}"
+                         th:text="${livePanel.focusMatch.scoreText}">
+                        1-0
+                    </div>
+
+                    <div class="side-live-focus-time"
+                         th:if="${!livePanel.focusMatch.live and livePanel.focusMatch.kickoffAt != null}"
+                         th:text="${#temporals.format(livePanel.focusMatch.kickoffAt, 'dd.MM HH:mm')}">
+                        11.06 22:00
+                    </div>
+                </div>
+
+                <div class="side-live-section"
+                     th:if="${livePanel.nextMatches != null and !livePanel.nextMatches.isEmpty()}">
+
+                    <div class="side-live-label">Next games</div>
+
+                    <div class="side-live-line"
+                         th:each="m : ${livePanel.nextMatches}">
+
+                        <span class="side-live-no" th:text="${m.matchNo}">2</span>
+
+                        <span class="side-live-teams">
+                            <span th:text="${m.teamA}">A</span>
+                            <span>-</span>
+                            <span th:text="${m.teamB}">B</span>
+                        </span>
+
+                        <span class="side-live-time"
+                              th:text="${m.kickoffAt == null ? '-' : #temporals.format(m.kickoffAt, 'dd.MM HH:mm')}">
+                            12.06
+                        </span>
+                    </div>
                 </div>
 
             </div>
+
+            <div class="side-spacer"></div>
 
             <a class="side-tab logout" href="/logout">Logout</a>
 
@@ -68,11 +129,11 @@
             </div>
 
             <div class="main-body" th:insert="${content}"></div>
-            
+
         </main>
 
     </div>
-
+<script src="/js/kickoff-countdown.js"></script>
 </div>
 
 </body>

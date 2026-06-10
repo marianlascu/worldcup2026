@@ -215,9 +215,10 @@ public class TournamentsController {
     @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/manual-score")
     public String saveManualScore(@PathVariable Long tournamentId,
                                   @PathVariable Long matchId,
-                                  @RequestParam Integer manualScoreA,
-                                  @RequestParam Integer manualScoreB,
+                                  @RequestParam(required = false) Integer manualScoreA,
+                                  @RequestParam(required = false) Integer manualScoreB,
                                   HttpSession session) {
+
         if (session.getAttribute("USER_ID") == null) {
             return "redirect:/login";
         }

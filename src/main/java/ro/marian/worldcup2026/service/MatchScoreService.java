@@ -24,8 +24,41 @@ public class MatchScoreService {
 
         MatchGame match = getMatch(matchId);
 
+        boolean bothEmpty = scoreA == null && scoreB == null;
+        boolean oneEmpty = scoreA == null || scoreB == null;
+
+        if (bothEmpty) {
+
+            // reset manual score
+            match.setManualScoreA(null);
+            match.setManualScoreB(null);
+
+            // reset official/validated score
+            match.setScoreA(null);
+            match.setScoreB(null);
+            match.setScoreSource(null);
+            match.setScoreValidatedYn("N");
+            match.setScoreValidatedAt(null);
+            match.setScoreValidatedBy(null);
+
+            // audit manual change
+            match.setManualUpdatedAt(LocalDateTime.now());
+            match.setManualUpdatedBy(username);
+
+            matchGameRepository.save(match);
+            return;
+        }
+
+        if (oneEmpty) {
+            throw new IllegalArgumentException(
+                    "Both scores must be provided or both left empty."
+            );
+        }
+
+        // save manual score only
         match.setManualScoreA(scoreA);
         match.setManualScoreB(scoreB);
+
         match.setManualUpdatedAt(LocalDateTime.now());
         match.setManualUpdatedBy(username);
 

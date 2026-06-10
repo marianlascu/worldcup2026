@@ -1301,3 +1301,153 @@ thead .mx-sticky {
     font-weight: 600;
 }
 
+.prediction-locked-badge {
+    margin-left: 8px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(239, 68, 68, 0.85);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   SIDE LIVE PANEL
+   ========================================================= */
+
+.side-live-panel {
+    margin-top: 22px;
+    padding: 12px;
+    border-radius: 16px;
+
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    max-height: 360px;
+    overflow: hidden;
+}
+
+.side-live-title {
+    margin-bottom: 10px;
+
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.side-live-section {
+    margin-bottom: 12px;
+}
+
+.side-live-label {
+    margin-bottom: 6px;
+
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.side-live-line {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    gap: 6px;
+    align-items: center;
+
+    padding: 4px 0;
+
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.side-live-no {
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 700;
+}
+
+.side-live-teams {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.side-live-score {
+    color: #ffffff;
+    font-weight: 900;
+}
+
+.side-live-time {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 700;
+}
+
+.side-live-focus {
+    margin: 10px 0 14px 0;
+    padding: 11px 10px;
+
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    text-align: center;
+}
+
+.side-live-focus.is-live {
+    background: rgba(239, 68, 68, 0.20);
+    border-color: rgba(239, 68, 68, 0.65);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.18);
+}
+
+.side-live-focus-no {
+    margin-top: 4px;
+
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.side-live-focus-teams {
+    margin-top: 6px;
+
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.side-live-focus-score {
+    margin-top: 8px;
+
+    color: #ef4444;
+    font-size: 21px;
+    font-weight: 950;
+}
+
+.side-live-focus-time {
+    margin-top: 8px;
+
+    color: #facc15;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+/* =========================================================
+   KICKOFF COUNTDOWN
+   ========================================================= */
+
+.kickoff-countdown {
+    color: #facc15;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.kickoff-countdown.is-live {
+    color: #ef4444;
+    font-weight: 950;
+}

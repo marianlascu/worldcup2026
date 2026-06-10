@@ -22,6 +22,7 @@ import ro.marian.worldcup2026.model.MatchGame;
 import ro.marian.worldcup2026.model.Prediction;
 import ro.marian.worldcup2026.dto.RankingPredictionMatrixRow;
 import ro.marian.worldcup2026.dto.PredictionMatrixCell;
+import ro.marian.worldcup2026.service.TournamentLivePanelService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class LeaguesController {
     private final AppUserRepository appUserRepository;
     private final PredictionRepository predictionRepository;
     private final MatchGameRepository matchGameRepository;
+    private final TournamentLivePanelService tournamentLivePanelService;
 
     public LeaguesController(
             LeagueRepository leagueRepository,
@@ -48,7 +50,8 @@ public class LeaguesController {
             TournamentRepository tournamentRepository,
             AppUserRepository appUserRepository,
             PredictionRepository predictionRepository,
-            MatchGameRepository matchGameRepository) {
+            MatchGameRepository matchGameRepository,
+            TournamentLivePanelService tournamentLivePanelService) {
 
         this.leagueRepository = leagueRepository;
         this.leagueMemberRepository = leagueMemberRepository;
@@ -56,6 +59,7 @@ public class LeaguesController {
         this.appUserRepository = appUserRepository;
         this.predictionRepository = predictionRepository;
         this.matchGameRepository = matchGameRepository;
+        this.tournamentLivePanelService = tournamentLivePanelService;
     }
 
     @GetMapping("/leagues")
@@ -337,26 +341,32 @@ public class LeaguesController {
                         .stream()
                         .collect(Collectors.toMap(Prediction::getMatchId, p -> p));
 
-        List<PredictionMatchRow> predictionRows = matches.stream()
-                .map(m -> {
-                    Prediction p = predictionsByMatchId.get(m.getId());
+    LocalDateTime now = LocalDateTime.now();
 
-                    return new PredictionMatchRow(
-                            m.getId(),
-                            m.getMatchNo(),
-                            m.getStage(),
-                            m.getGroupName(),
-                            m.getTeamA(),
-                            m.getTeamB(),
-                            m.getKickoffAt(),
-                            m.getVenueCity(),
-                            m.getScoreA(),
-                            m.getScoreB(),
-                            p == null ? null : p.getPredictedScoreA(),
-                            p == null ? null : p.getPredictedScoreB()
-                    );
-                })
-                .toList();
+    List<PredictionMatchRow> predictionRows = matches.stream()
+            .map(m -> {
+                Prediction p = predictionsByMatchId.get(m.getId());
+
+                boolean locked = m.getKickoffAt() != null
+                        && !m.getKickoffAt().isAfter(now);
+
+                return new PredictionMatchRow(
+                        m.getId(),
+                        m.getMatchNo(),
+                        m.getStage(),
+                        m.getGroupName(),
+                        m.getTeamA(),
+                        m.getTeamB(),
+                        m.getKickoffAt(),
+                        m.getVenueCity(),
+                        m.getScoreA(),
+                        m.getScoreB(),
+                        p == null ? null : p.getPredictedScoreA(),
+                        p == null ? null : p.getPredictedScoreB(),
+                        locked
+                );
+            })
+            .toList();
 
         model.addAttribute("predictionRows", predictionRows);
 
@@ -389,12 +399,31 @@ public class LeaguesController {
             return "redirect:/leagues";
         }
 
+        LocalDateTime now = LocalDateTime.now();
+
         for (Long mid : matchId) {
 
             Integer scoreA = parseInteger(params.get("scoreA_" + mid));
             Integer scoreB = parseInteger(params.get("scoreB_" + mid));
 
             if (scoreA == null && scoreB == null) {
+                continue;
+            }
+
+            if (scoreA == null || scoreB == null) {
+                continue;
+            }
+
+            MatchGame match = matchGameRepository.findById(mid).orElse(null);
+
+            if (match == null) {
+                continue;
+            }
+
+            boolean locked = match.getKickoffAt() != null
+                    && !match.getKickoffAt().isAfter(now);
+
+            if (locked) {
                 continue;
             }
 
@@ -538,6 +567,10 @@ public class LeaguesController {
     addUserInfo(session, model);
 
     model.addAttribute("league", league);
+    model.addAttribute(
+            "livePanel",
+            tournamentLivePanelService.build(league.getTournamentId())
+    );    
     model.addAttribute("activeLeagueTab", activeLeagueTab);
     model.addAttribute("contentFragment", leagueContentFragmentFor(activeLeagueTab));
     model.addAttribute("canEditLeague", canEditLeague(session, league));

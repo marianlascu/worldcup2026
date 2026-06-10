@@ -4,20 +4,22 @@ import java.time.LocalDateTime;
 
 public class PredictionMatchRow {
 
-    private Long matchId;
-    private Integer matchNo;
-    private String stage;
-    private String groupName;
-    private String teamA;
-    private String teamB;
-    private LocalDateTime kickoffAt;
-    private String venueCity;
+    private final Long matchId;
+    private final Integer matchNo;
+    private final String stage;
+    private final String groupName;
+    private final String teamA;
+    private final String teamB;
+    private final LocalDateTime kickoffAt;
+    private final String venueCity;
 
-    private Integer officialScoreA;
-    private Integer officialScoreB;
+    private final Integer officialScoreA;
+    private final Integer officialScoreB;
 
-    private Integer predictedScoreA;
-    private Integer predictedScoreB;
+    private final Integer predictedScoreA;
+    private final Integer predictedScoreB;
+
+    private final boolean locked;
 
     public PredictionMatchRow(Long matchId,
                               Integer matchNo,
@@ -30,7 +32,9 @@ public class PredictionMatchRow {
                               Integer officialScoreA,
                               Integer officialScoreB,
                               Integer predictedScoreA,
-                              Integer predictedScoreB) {
+                              Integer predictedScoreB,
+                              boolean locked) {
+
         this.matchId = matchId;
         this.matchNo = matchNo;
         this.stage = stage;
@@ -43,6 +47,7 @@ public class PredictionMatchRow {
         this.officialScoreB = officialScoreB;
         this.predictedScoreA = predictedScoreA;
         this.predictedScoreB = predictedScoreB;
+        this.locked = locked;
     }
 
     public Long getMatchId() {
@@ -91,5 +96,9 @@ public class PredictionMatchRow {
 
     public Integer getPredictedScoreB() {
         return predictedScoreB;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 }
