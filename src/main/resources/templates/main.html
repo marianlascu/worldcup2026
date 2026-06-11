@@ -17,37 +17,86 @@
 
     <div th:fragment="content">
 
-        <section class="card">
+        <section class="card"
+                 style="max-height:calc(100vh - 160px);
+                        overflow-y:auto;
+                        padding-right:8px;">
 
-            <h2>Bine ai venit!</h2>
+            <h2>Regulament Sport Predictor</h2>
 
             <p>
-                Alege o opțiune din meniul din stânga.
+                Aplicația permite introducerea predicțiilor pentru meciurile din competiția selectată
+                și calculează automat clasamentul participanților pe baza scorurilor oficiale.
             </p>
 
-            <div class="quick-grid">
+            <h3 style="color:#FFD700;">Introducerea predicțiilor</h3>
 
-                <a class="quick-card" href="/matches">
-                    <strong>Matches</strong>
-                    <span>Programul meciurilor</span>
-                </a>
+            <p>
+                Pentru a introduce predicțiile, selectați opțiunea <strong>Leagues</strong>
+                din meniul vertical din stânga, apoi deschideți liga în care participați (click pe ligă).
+                În tab-ul <strong>Predictions</strong> completați scorul estimat pentru fiecare meci.
+            </p>
 
-                <a class="quick-card" href="#">
-                    <strong>Tables</strong>
-                    <span>Clasamente grupe</span>
-                </a>
+            <p>
+                După completarea scorurilor, apăsați butonul <strong>Save predictions</strong>.
+                Predicțiile pot fi modificate până la ora de start a fiecărui meci.
+                După kickoff, predicția pentru acel meci devine blocată și nu mai poate fi schimbată.
+            </p>
 
-                <a class="quick-card" href="#">
-                    <strong>Players</strong>
-                    <span>Participanți</span>
-                </a>
+            <h3 style="color:#FFD700;">Alegerea câștigătoarei competiției</h3>
 
-                <a class="quick-card" href="#">
-                    <strong>Leagues</strong>
-                    <span>Clasament pronosticuri</span>
-                </a>
+            <p>
+                În partea de sus a tab-ului <strong>Predictions</strong> puteți selecta echipa
+                pe care o considerați câștigătoarea turneului. Alegerea se salvează cu butonul
+                <strong>Save</strong>.
+            </p>
 
-            </div>
+            <p>
+                Selecția câștigătoarei este disponibilă doar până la primul kickoff al competiției.
+                După începerea primului meci, câmpul devine <strong>Locked</strong>.
+            </p>
+
+            <h3 style="color:#FFD700;">Punctaj</h3>
+
+            <p>
+                Punctajul se calculează după validarea scorului oficial al fiecărui meci.
+            </p>
+
+            <ul>
+                <li>
+                    <strong style="color:#8B5A2B;">1 punct</strong>
+                    pentru pronosticarea corectă a rezultatului:
+                    victorie gazde, egal sau victorie oaspeți.
+                </li>
+
+                <li>
+                    <strong style="color:#00C853;">3 puncte</strong>
+                    pentru scor exact, dacă totalul golurilor din meci
+                    este mai mic sau egal cu 3.
+                </li>
+
+                <li>
+                    <strong style="color:#FF00FF;">4 puncte</strong>
+                    pentru scor exact, dacă totalul golurilor din meci
+                    este mai mare de 3.
+                </li>
+            </ul>
+
+            <h3 style="color:#FFD700;">Clasament</h3>
+
+            <p>
+                Clasamentul participanților se actualizează pe baza predicțiilor salvate și a
+                scorurilor oficiale validate. Pentru vizualizarea punctajelor, intrați în
+                <strong>Leagues</strong>, selectați liga dorită și consultați zona de ranking.
+            </p>
+
+            <h3 style="color:#FFD700;">Meciuri live și scoruri oficiale</h3>
+
+            <p>
+                Meciurile aflate în desfășurare sunt afișate în zona live. Scorurile oficiale
+                pot fi preluate automat din API atunci când sunt disponibile sau introduse manual
+                din zona <strong>Matches</strong>.
+            </p>
 
         </section>
 
