@@ -103,6 +103,9 @@ public class MatchGame {
 
     @Column(name = "score_validated_by")
     private String scoreValidatedBy;
+    
+    @Column(name = "api_match_id")
+    private Long apiMatchId;    
 
     /* =========================================================
        GETTERS / SETTERS
@@ -294,5 +297,13 @@ public class MatchGame {
 
     public void setScoreValidatedBy(String scoreValidatedBy) {
         this.scoreValidatedBy = scoreValidatedBy;
+    }
+    
+    public Long getApiMatchId() {
+    return apiMatchId;
+}
+
+    public void setApiMatchId(Long apiMatchId) {
+        this.apiMatchId = apiMatchId;
     }
 }

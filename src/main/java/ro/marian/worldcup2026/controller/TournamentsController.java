@@ -11,6 +11,7 @@ import ro.marian.worldcup2026.repository.TournamentRepository;
 import ro.marian.worldcup2026.service.KnockoutService;
 import ro.marian.worldcup2026.service.MatchScoreService;
 import ro.marian.worldcup2026.service.StandingService;
+import ro.marian.worldcup2026.service.MatchApiSyncService;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,17 +27,20 @@ public class TournamentsController {
     private final StandingService standingService;
     private final MatchScoreService matchScoreService;
     private final KnockoutService knockoutService;
+    private final MatchApiSyncService matchApiSyncService;
 
     public TournamentsController(TournamentRepository tournamentRepository,
                                  MatchGameRepository matchGameRepository,
                                  StandingService standingService,
                                  MatchScoreService matchScoreService,
-                                 KnockoutService knockoutService) {
+                                 KnockoutService knockoutService,
+                                 MatchApiSyncService matchApiSyncService) {
         this.tournamentRepository = tournamentRepository;
         this.matchGameRepository = matchGameRepository;
         this.standingService = standingService;
         this.matchScoreService = matchScoreService;
         this.knockoutService = knockoutService;
+        this.matchApiSyncService = matchApiSyncService;
     }
 
     @GetMapping("/tournaments")
@@ -260,6 +264,19 @@ public class TournamentsController {
         return "redirect:/tournaments/" + tournamentId + "/tables";
     }
 
+    @PostMapping("/tournaments/{tournamentId}/sync-football-data")
+    public String syncFootballData(@PathVariable Long tournamentId,
+                                   HttpSession session) {
+
+        if (session.getAttribute("USER_ID") == null) {
+            return "redirect:/login";
+        }
+
+        matchApiSyncService.syncFootballDataMatches(tournamentId);
+
+        return "redirect:/tournaments/" + tournamentId + "/matches";
+    }    
+    
     private String openTournamentTab(Long id,
                                      String activeTab,
                                      HttpSession session,

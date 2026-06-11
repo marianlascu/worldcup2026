@@ -146,7 +146,7 @@ public class StandingService {
             case "Denmark" -> "🇩🇰";
             case "Ecuador" -> "🇪🇨";
             case "Egypt" -> "🇪🇬";
-            case "England" -> "🏴";
+            case "England" -> "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
             case "France" -> "🇫🇷";
             case "Germany" -> "🇩🇪";
             case "Ghana" -> "🇬🇭";
@@ -165,7 +165,7 @@ public class StandingService {
             case "Portugal" -> "🇵🇹";
             case "Qatar" -> "🇶🇦";
             case "Saudi Arabia" -> "🇸🇦";
-            case "Scotland" -> "🏴";
+            case "Scotland" -> "🏴󠁧󠁢󠁳󠁣󠁴󠁿";
             case "Senegal" -> "🇸🇳";
             case "Serbia" -> "🇷🇸";
             case "South Africa" -> "🇿🇦";
@@ -178,7 +178,28 @@ public class StandingService {
             case "Ukraine" -> "🇺🇦";
             case "Uruguay" -> "🇺🇾";
             case "USA", "United States" -> "🇺🇸";
-            case "Wales" -> "🏴";
+            case "Wales" -> "🏴󠁧󠁢󠁷󠁬󠁳󠁿";
+            case "Bosnia & Herzegovina",
+                 "Bosnia-Herzegovina" -> "🇧🇦";
+            case "Cape Verde",
+                 "Cape Verde Islands" -> "🇨🇻";
+            case "Curacao",
+                 "Curaçao" -> "🇨🇼";
+            case "DR Congo",
+                 "Congo DR" -> "🇨🇩";
+            case "Ivory Coast",
+                 "Côte d'Ivoire" -> "🇨🇮";    
+            case "Algeria" -> "🇩🇿";
+
+            case "Haiti" -> "🇭🇹";
+
+            case "Iraq" -> "🇮🇶";
+
+            case "Jordan" -> "🇯🇴";
+
+            case "Panama" -> "🇵🇦";
+
+            case "Uzbekistan" -> "🇺🇿";                
             default -> "⚽";
         };
     }

@@ -6,12 +6,52 @@
 
     <section class="card league-inline-card">
 
-        <h3>Predictions</h3>
+        <div class="predictions-header-row">
+            <h3>Predictions</h3>
+
+            <form class="winner-form"
+                  method="post"
+                  th:action="@{/leagues/{id}/winner/save(id=${league.id})}">
+
+                <label for="winnerTeam">Winner</label>
+
+                <select id="winnerTeam"
+                        name="teamName"
+                        th:disabled="${winnerLocked}">
+                    <option value="">-- select --</option>
+
+                    <option th:each="team : ${winnerTeams}"
+                            th:value="${team}"
+                            th:text="${team}"
+                            th:selected="${team == winnerTeamName}">
+                        Brazil
+                    </option>
+                </select>
+
+                <button type="submit"
+                        class="winner-save-btn"
+                        th:disabled="${winnerLocked}">
+                    Save
+                </button>
+
+                <span class="winner-current"
+                      th:if="${!winnerLocked and winnerTeamName != null and winnerTeamName != ''}">
+                    Current:
+                    <strong th:text="${winnerTeamName}">Brazil</strong>
+                </span>
+
+                <span class="winner-locked"
+                      th:if="${winnerLocked}">
+                    Locked
+                </span>
+
+            </form>
+        </div>
 
         <form method="post"
               th:action="@{/leagues/{id}/predictions/save(id=${league.id})}">
 
-            <table class="simple-table">
+            <table class="simple-table predictions-table">
                 <thead>
                 <tr>
                     <th>No</th>
@@ -51,6 +91,7 @@
                               th:text="${m.officialScoreA + ' - ' + m.officialScoreB}">
                             2 - 1
                         </span>
+
                         <span th:if="${m.officialScoreA == null or m.officialScoreB == null}"
                               class="kickoff-countdown"
                               th:attr="data-kickoff=${m.kickoffAt == null ? '' : #temporals.format(m.kickoffAt, 'yyyy-MM-dd''T''HH:mm:ss')}">
@@ -80,12 +121,11 @@
                                th:name="${'scoreB_' + m.matchId}"
                                th:value="${m.predictedScoreB}"
                                th:disabled="${m.locked}">
-                        
+
                         <span th:if="${m.locked}"
                               class="prediction-locked-badge">
                             LOCKED
-                        </span>   
-                        
+                        </span>
                     </td>
                 </tr>
 
@@ -95,8 +135,10 @@
                 </tbody>
             </table>
 
-            <div style="margin-top: 14px;">
-                <button type="submit">Save predictions</button>
+            <div class="predictions-save-row">
+                <button type="submit" class="save-predictions-btn">
+                    Save predictions
+                </button>
             </div>
 
         </form>

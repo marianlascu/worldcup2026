@@ -4,6 +4,20 @@
 
 <div th:fragment="content">
 
+    <div class="matches-toolbar">
+
+        <form method="post"
+              th:action="@{/tournaments/{id}/sync-football-data(id=${selectedTournamentId})}"
+              class="inline-action-form">
+
+            <button type="submit" class="score-btn api-sync">
+                Sync API
+            </button>
+
+        </form>
+
+    </div>
+
     <table class="data-table matches-table" th:if="${matches != null and !matches.isEmpty()}">
         <thead>
         <tr>
@@ -12,6 +26,7 @@
             <th>Team A</th>
             <th>Team B</th>
             <th>Official</th>
+            <th>API</th>
             <th>Manual</th>
             <th>Actions</th>
             <th>Stage</th>
@@ -24,7 +39,7 @@
         <tr th:each="m : ${matches}">
             <td th:text="${m.matchNo}">1</td>
 
-            <td th:text="${#temporals.format(m.kickoffAt, 'dd.MM.yyyy HH:mm')}">
+            <td th:text="${m.kickoffAt == null ? '-' : #temporals.format(m.kickoffAt, 'dd.MM.yyyy HH:mm')}">
                 11.06.2026 22:00
             </td>
 
@@ -36,7 +51,31 @@
                       th:text="${m.scoreA + ' - ' + m.scoreB}">
                     0 - 0
                 </span>
-                <span th:if="${m.scoreA == null or m.scoreB == null}">-</span>
+
+                <span th:if="${m.scoreA == null or m.scoreB == null}">
+                    -
+                </span>
+            </td>
+
+            <td class="score-cell api-score-cell">
+                <span th:if="${m.apiScoreA != null and m.apiScoreB != null}"
+                      class="api-live-score"
+                      th:text="${m.apiScoreA + ' - ' + m.apiScoreB}">
+                    0 - 0
+                </span>
+
+                <span th:if="${m.apiScoreA == null or m.apiScoreB == null}">
+                    -
+                </span>
+
+                <span th:if="${m.apiStatus != null}"
+                      th:class="${'api-status api-status-' + #strings.toLowerCase(m.apiStatus)}"
+                      th:text="${m.apiStatus == 'TIMED' or m.apiStatus == 'SCHEDULED' ? 'UPCOMING' :
+                                (m.apiStatus == 'IN_PLAY' ? 'LIVE' :
+                                (m.apiStatus == 'PAUSED' ? 'PAUSED' :
+                                (m.apiStatus == 'FINISHED' ? 'FINISHED' : m.apiStatus)))}">
+                    STATUS
+                </span>
             </td>
 
             <td>
@@ -77,6 +116,18 @@
                     </button>
 
                 </form>
+
+                <form th:action="@{/tournaments/{tid}/matches/{mid}/validate-api(tid=${selectedTournamentId}, mid=${m.id})}"
+                      method="post"
+                      class="inline-action-form">
+
+                    <button type="submit"
+                            class="score-btn validate-api"
+                            th:disabled="${m.apiScoreA == null or m.apiScoreB == null}">
+                        Validate API
+                    </button>
+
+                </form>
             </td>
 
             <td th:text="${m.stage}">Group Stage</td>
@@ -85,6 +136,11 @@
         </tr>
         </tbody>
     </table>
+
+    <div th:if="${matches == null or matches.isEmpty()}"
+         class="empty-state">
+        No matches available for this tournament.
+    </div>
 
 </div>
 

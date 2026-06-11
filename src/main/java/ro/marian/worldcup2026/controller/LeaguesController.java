@@ -23,6 +23,8 @@ import ro.marian.worldcup2026.model.Prediction;
 import ro.marian.worldcup2026.dto.RankingPredictionMatrixRow;
 import ro.marian.worldcup2026.dto.PredictionMatrixCell;
 import ro.marian.worldcup2026.service.TournamentLivePanelService;
+import ro.marian.worldcup2026.model.WinnerPrediction;
+import ro.marian.worldcup2026.repository.WinnerPredictionRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class LeaguesController {
     private final PredictionRepository predictionRepository;
     private final MatchGameRepository matchGameRepository;
     private final TournamentLivePanelService tournamentLivePanelService;
+    private final WinnerPredictionRepository winnerPredictionRepository;
 
     public LeaguesController(
             LeagueRepository leagueRepository,
@@ -51,7 +54,8 @@ public class LeaguesController {
             AppUserRepository appUserRepository,
             PredictionRepository predictionRepository,
             MatchGameRepository matchGameRepository,
-            TournamentLivePanelService tournamentLivePanelService) {
+            TournamentLivePanelService tournamentLivePanelService,
+            WinnerPredictionRepository winnerPredictionRepository) {
 
         this.leagueRepository = leagueRepository;
         this.leagueMemberRepository = leagueMemberRepository;
@@ -60,6 +64,7 @@ public class LeaguesController {
         this.predictionRepository = predictionRepository;
         this.matchGameRepository = matchGameRepository;
         this.tournamentLivePanelService = tournamentLivePanelService;
+        this.winnerPredictionRepository = winnerPredictionRepository;
     }
 
     @GetMapping("/leagues")
@@ -341,34 +346,59 @@ public class LeaguesController {
                         .stream()
                         .collect(Collectors.toMap(Prediction::getMatchId, p -> p));
 
-    LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
 
-    List<PredictionMatchRow> predictionRows = matches.stream()
-            .map(m -> {
-                Prediction p = predictionsByMatchId.get(m.getId());
+        boolean winnerLocked = matches.stream()
+                .anyMatch(m -> m.getKickoffAt() != null
+                        && !m.getKickoffAt().isAfter(now));
 
-                boolean locked = m.getKickoffAt() != null
-                        && !m.getKickoffAt().isAfter(now);
+        List<PredictionMatchRow> predictionRows = matches.stream()
+                .map(m -> {
+                    Prediction p = predictionsByMatchId.get(m.getId());
 
-                return new PredictionMatchRow(
-                        m.getId(),
-                        m.getMatchNo(),
-                        m.getStage(),
-                        m.getGroupName(),
-                        m.getTeamA(),
-                        m.getTeamB(),
-                        m.getKickoffAt(),
-                        m.getVenueCity(),
-                        m.getScoreA(),
-                        m.getScoreB(),
-                        p == null ? null : p.getPredictedScoreA(),
-                        p == null ? null : p.getPredictedScoreB(),
-                        locked
-                );
-            })
-            .toList();
+                    boolean locked = m.getKickoffAt() != null
+                            && !m.getKickoffAt().isAfter(now);
+
+                    return new PredictionMatchRow(
+                            m.getId(),
+                            m.getMatchNo(),
+                            m.getStage(),
+                            m.getGroupName(),
+                            m.getTeamA(),
+                            m.getTeamB(),
+                            m.getKickoffAt(),
+                            m.getVenueCity(),
+                            m.getScoreA(),
+                            m.getScoreB(),
+                            p == null ? null : p.getPredictedScoreA(),
+                            p == null ? null : p.getPredictedScoreB(),
+                            locked
+                    );
+                })
+                .toList();
+
+        List<String> winnerTeams = matches.stream()
+                .flatMap(m -> java.util.stream.Stream.of(m.getTeamA(), m.getTeamB()))
+                .filter(java.util.Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .filter(s -> !isPlaceholderTeamName(s))
+                .distinct()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .toList();
+
+        WinnerPrediction winnerPrediction = winnerPredictionRepository
+                .findByLeagueIdAndUserId(id, userId)
+                .orElse(null);
 
         model.addAttribute("predictionRows", predictionRows);
+        model.addAttribute("winnerTeams", winnerTeams);
+        model.addAttribute("winnerPrediction", winnerPrediction);
+        model.addAttribute("winnerLocked", winnerLocked);
+        model.addAttribute(
+                "winnerTeamName",
+                winnerPrediction == null ? "" : winnerPrediction.getTeamName()
+        );
 
         return view;
     }
@@ -511,6 +541,53 @@ public class LeaguesController {
 
         return view;
     }  
+    
+    @PostMapping("/leagues/{id}/winner/save")
+    public String saveWinnerPrediction(@PathVariable Long id,
+                                       @RequestParam String teamName,
+                                       HttpSession session) {
+
+        if (session.getAttribute("USER_ID") == null) {
+            return "redirect:/login";
+        }
+
+        Long userId = currentUserId(session);
+
+        League league = leagueRepository.findById(id).orElse(null);
+
+        if (league == null || !"Y".equalsIgnoreCase(league.getActiveYn())) {
+            return "redirect:/leagues";
+        }
+
+        boolean isMember = leagueMemberRepository.findByLeagueIdAndUserId(id, userId)
+                .filter(m -> "Y".equalsIgnoreCase(m.getActiveYn()))
+                .isPresent();
+
+        if (!isMember && !isAdmin(session)) {
+            return "redirect:/leagues";
+        }
+
+        if (teamName == null || teamName.isBlank()) {
+            return "redirect:/leagues/" + id + "/predictions";
+        }
+
+        WinnerPrediction winnerPrediction = winnerPredictionRepository
+                .findByLeagueIdAndUserId(id, userId)
+                .orElseGet(() -> {
+                    WinnerPrediction wp = new WinnerPrediction();
+                    wp.setLeagueId(id);
+                    wp.setUserId(userId);
+                    wp.setTournamentId(league.getTournamentId());
+                    return wp;
+                });
+
+        winnerPrediction.setTeamName(teamName.trim());
+        winnerPrediction.setTournamentId(league.getTournamentId());
+
+        winnerPredictionRepository.save(winnerPrediction);
+
+        return "redirect:/leagues/" + id + "/predictions";
+    }    
 
     private String generateLeagueCode() {
         return "L-" + UUID.randomUUID()
@@ -835,5 +912,25 @@ public class LeaguesController {
         }
 
         return stage;
+    }    
+    
+    private boolean isPlaceholderTeamName(String teamName) {
+        if (teamName == null) {
+            return true;
+        }
+
+        String s = teamName.trim().toLowerCase();
+
+        if (s.isBlank()) {
+            return true;
+        }
+
+        return s.contains("winner")
+                || s.contains("runner")
+                || s.contains("group")
+                || s.contains("third")
+                || s.contains("3rd")
+                || s.matches(".*\\b[123][a-h]\\b.*")
+                || s.matches(".*\\b[123]\\s*[a-h]\\b.*");
     }    
 }
