@@ -10,20 +10,10 @@
                    'background-image: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.72)), url(/img/' + ${pageBgImage} + ')'
                    : null">
 
-        <input type="checkbox" id="mobileMenuToggle" class="mobile-menu-toggle">
-
-        <label for="mobileMenuToggle" class="mobile-menu-backdrop"></label>
-
         <aside class="side-menu">
 
-            <div class="side-title-row">
-                <div class="side-title">
-                    Sport Predictor
-                </div>
-
-                <label for="mobileMenuToggle" class="mobile-menu-close">
-                    ×
-                </label>
+            <div class="side-title">
+                Sport Predictor
             </div>
 
             <a th:class="${activeTab == 'main'} ? 'side-tab active' : 'side-tab'" href="/main">Home</a>
@@ -126,11 +116,7 @@
 
             <div class="topbar">
 
-                <label for="mobileMenuToggle" class="mobile-menu-button">
-                    ☰
-                </label>
-
-                <div class="topbar-title-block">
+                <div>
                     <h1 th:text="${pageTitle}">Page title</h1>
                     <div class="subtitle">Sports prediction platform</div>
                 </div>
@@ -147,9 +133,7 @@
         </main>
 
     </div>
-
-    <script src="/js/kickoff-countdown.js"></script>
-
+<script src="/js/kickoff-countdown.js"></script>
 </div>
 
 </body>
