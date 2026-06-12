@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class LeaguesController {
@@ -407,7 +408,8 @@ public class LeaguesController {
     public String savePredictions(@PathVariable Long id,
                                   @RequestParam List<Long> matchId,
                                   @RequestParam Map<String, String> params,
-                                  HttpSession session) {
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
 
         if (session.getAttribute("USER_ID") == null) {
             return "redirect:/login";
@@ -430,6 +432,8 @@ public class LeaguesController {
         }
 
         LocalDateTime now = LocalDateTime.now();
+
+        int savedCount = 0;
 
         for (Long mid : matchId) {
 
@@ -471,7 +475,14 @@ public class LeaguesController {
             prediction.setPredictedScoreB(scoreB);
 
             predictionRepository.save(prediction);
+
+            savedCount++;
         }
+
+        redirectAttributes.addFlashAttribute(
+                "predictionSaveMessage",
+                savedCount + " predictions saved!"
+        );
 
         return "redirect:/leagues/" + id + "/predictions";
     }    

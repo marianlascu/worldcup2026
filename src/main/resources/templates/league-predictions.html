@@ -7,9 +7,17 @@
     <section class="card league-inline-card">
 
         <div class="predictions-header-row">
+
             <h3>Predictions</h3>
 
-            <form class="winner-form"
+            <button type="submit"
+                    form="predictionsForm"
+                    class="winner-save-btn">
+                Save predictions
+            </button>
+
+            <form id="winnerForm"
+                  class="winner-form"
                   method="post"
                   th:action="@{/leagues/{id}/winner/save(id=${league.id})}">
 
@@ -46,9 +54,17 @@
                 </span>
 
             </form>
+
         </div>
 
-        <form method="post"
+        <div class="prediction-save-alert"
+             th:if="${predictionSaveMessage != null}"
+             th:text="${predictionSaveMessage}">
+            3 predictions saved!
+        </div>
+
+        <form id="predictionsForm"
+              method="post"
               th:action="@{/leagues/{id}/predictions/save(id=${league.id})}">
 
             <table class="simple-table predictions-table">
@@ -134,12 +150,6 @@
                 </tr>
                 </tbody>
             </table>
-
-            <div class="predictions-save-row">
-                <button type="submit" class="save-predictions-btn">
-                    Save predictions
-                </button>
-            </div>
 
         </form>
 

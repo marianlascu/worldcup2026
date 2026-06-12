@@ -21,78 +21,78 @@ public class MatchApiSyncService {
         this.matchGameRepository = matchGameRepository;
     }
 
-@Transactional
-public int syncFootballDataMatches(Long tournamentId) {
+    @Transactional
+    public int syncFootballDataMatches(Long tournamentId) {
 
-    List<FootballDataMatchDto> apiMatches =
-            footballDataClient.fetchCompetitionMatches();
+        List<FootballDataMatchDto> apiMatches =
+                footballDataClient.fetchCompetitionMatches();
 
-    List<MatchGame> localMatches =
-            matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(tournamentId);
+        List<MatchGame> localMatches =
+                matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(tournamentId);
 
-    int matched = 0;
-    int unmatched = 0;
-    int updated = 0;
+        int matched = 0;
+        int unmatched = 0;
+        int updated = 0;
 
-    System.out.println("[FOOTBALL-DATA SYNC] START tournamentId="
-            + tournamentId
-            + ", apiMatches="
-            + apiMatches.size()
-            + ", localMatches="
-            + localMatches.size());
+        System.out.println("[FOOTBALL-DATA SYNC] START tournamentId="
+                + tournamentId
+                + ", apiMatches="
+                + apiMatches.size()
+                + ", localMatches="
+                + localMatches.size());
 
-    for (FootballDataMatchDto apiMatch : apiMatches) {
+        for (FootballDataMatchDto apiMatch : apiMatches) {
 
-        MatchGame localMatch = findLocalMatch(apiMatch, localMatches);
+            MatchGame localMatch = findLocalMatch(apiMatch, localMatches);
 
-        if (localMatch == null) {
-            unmatched++;
+            if (localMatch == null) {
+                unmatched++;
 
-            System.out.println("[FOOTBALL-DATA SYNC] UNMATCHED: "
-                    + apiMatch.getHomeTeamName()
-                    + " - "
-                    + apiMatch.getAwayTeamName()
-                    + " / status="
-                    + apiMatch.getStatus()
-                    + " / kickoff="
-                    + apiMatch.getUtcKickoffAt());
+                System.out.println("[FOOTBALL-DATA SYNC] UNMATCHED: "
+                        + apiMatch.getHomeTeamName()
+                        + " - "
+                        + apiMatch.getAwayTeamName()
+                        + " / status="
+                        + apiMatch.getStatus()
+                        + " / kickoff="
+                        + apiMatch.getUtcKickoffAt());
 
-            continue;
+                continue;
+            }
+
+            matched++;
+
+            boolean changed = applyApiData(localMatch, apiMatch);
+
+            if (changed) {
+                updated++;
+
+                System.out.println("[FOOTBALL-DATA SYNC] UPDATED: #"
+                        + localMatch.getMatchNo()
+                        + " "
+                        + localMatch.getTeamA()
+                        + " - "
+                        + localMatch.getTeamB()
+                        + " / apiStatus="
+                        + apiMatch.getStatus()
+                        + " / apiScore="
+                        + apiMatch.getHomeScore()
+                        + "-"
+                        + apiMatch.getAwayScore());
+            }
         }
 
-        matched++;
+        System.out.println("[FOOTBALL-DATA SYNC] DONE tournamentId="
+                + tournamentId
+                + ", matched="
+                + matched
+                + ", unmatched="
+                + unmatched
+                + ", updated="
+                + updated);
 
-        boolean changed = applyApiData(localMatch, apiMatch);
-
-        if (changed) {
-            updated++;
-
-            System.out.println("[FOOTBALL-DATA SYNC] UPDATED: #"
-                    + localMatch.getMatchNo()
-                    + " "
-                    + localMatch.getTeamA()
-                    + " - "
-                    + localMatch.getTeamB()
-                    + " / apiStatus="
-                    + apiMatch.getStatus()
-                    + " / apiScore="
-                    + apiMatch.getHomeScore()
-                    + "-"
-                    + apiMatch.getAwayScore());
-        }
+        return updated;
     }
-
-    System.out.println("[FOOTBALL-DATA SYNC] DONE tournamentId="
-            + tournamentId
-            + ", matched="
-            + matched
-            + ", unmatched="
-            + unmatched
-            + ", updated="
-            + updated);
-
-    return updated;
-}
 
     private MatchGame findLocalMatch(FootballDataMatchDto apiMatch,
                                      List<MatchGame> localMatches) {
@@ -127,6 +127,12 @@ public int syncFootballDataMatches(Long tournamentId) {
 
         boolean changed = false;
 
+        if (apiMatch.getExternalId() != null
+                && !apiMatch.getExternalId().equals(match.getApiMatchId())) {
+            match.setApiMatchId(apiMatch.getExternalId());
+            changed = true;
+        }
+
         if (apiMatch.getUtcKickoffAt() != null
                 && !apiMatch.getUtcKickoffAt().equals(match.getKickoffAt())) {
             match.setKickoffAt(apiMatch.getUtcKickoffAt());
@@ -148,16 +154,47 @@ public int syncFootballDataMatches(Long tournamentId) {
             changed = true;
         }
 
+        /*
+         * API self-validation:
+         * Daca API-ul trimite scor complet, scorul devine oficial imediat.
+         * Nu mai este necesar buton Validate API.
+         *
+         * Atentie:
+         * Meciul NU este considerat finished doar pentru ca are scoreA/scoreB.
+         * Finished se decide separat prin apiStatus = FINISHED
+         * sau manual validate.
+         */
+        if (apiMatch.getHomeScore() != null && apiMatch.getAwayScore() != null) {
+
+            if (!equalsInteger(match.getScoreA(), apiMatch.getHomeScore())) {
+                match.setScoreA(apiMatch.getHomeScore());
+                changed = true;
+            }
+
+            if (!equalsInteger(match.getScoreB(), apiMatch.getAwayScore())) {
+                match.setScoreB(apiMatch.getAwayScore());
+                changed = true;
+            }
+
+            if (!equalsString(match.getScoreSource(), "API")) {
+                match.setScoreSource("API");
+                changed = true;
+            }
+
+            if (!equalsString(match.getScoreValidatedYn(), "Y")) {
+                match.setScoreValidatedYn("Y");
+                changed = true;
+            }
+
+            match.setScoreValidatedAt(LocalDateTime.now());
+            match.setScoreValidatedBy("API");
+            changed = true;
+        }
+
         if (changed) {
             match.setApiUpdatedAt(LocalDateTime.now());
             matchGameRepository.save(match);
         }
-        
-        if (apiMatch.getExternalId() != null
-                && !apiMatch.getExternalId().equals(match.getApiMatchId())) {
-            match.setApiMatchId(apiMatch.getExternalId());
-            changed = true;
-        }        
 
         return changed;
     }

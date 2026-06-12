@@ -45,14 +45,20 @@ public class TournamentLivePanelService {
         LocalDateTime now = LocalDateTime.now();
 
         /*
-         * Last games:
-         * luam ultimele 5 meciuri terminate, dar le afisam cronologic crescator.
-         * Exemplu: daca ultimele doua sunt 1 si 2, afisam 1, 2, nu 2, 1.
+         * LAST GAMES:
+         * Meciul ajunge aici doar daca este finalizat real.
+         *
+         * API:
+         *   api_status = FINISHED
+         *
+         * Manual backup:
+         *   score_source = MANUAL
+         *   score_validated_yn = Y
          */
         List<MatchGame> finished = matches.stream()
                 .filter(m -> m.getKickoffAt() != null)
                 .filter(m -> !m.getKickoffAt().isAfter(now))
-                .filter(m -> m.getScoreA() != null && m.getScoreB() != null)
+                .filter(this::isFinished)
                 .sorted(Comparator.comparing(MatchGame::getKickoffAt).reversed())
                 .limit(5)
                 .sorted(Comparator.comparing(MatchGame::getKickoffAt)
@@ -66,14 +72,15 @@ public class TournamentLivePanelService {
         );
 
         /*
-         * Focus match:
-         * - daca exista meci inceput si fara scor final => LIVE NOW
+         * FOCUS MATCH:
+         * - daca a inceput si NU este finished => LIVE NOW
+         * - chiar daca are scor API live, ramane live pana api_status = FINISHED
          * - altfel primul meci viitor => NEXT MATCH
          */
         MatchGame liveMatch = matches.stream()
                 .filter(m -> m.getKickoffAt() != null)
                 .filter(m -> !m.getKickoffAt().isAfter(now))
-                .filter(m -> m.getScoreA() == null || m.getScoreB() == null)
+                .filter(m -> !isFinished(m))
                 .min(Comparator.comparing(MatchGame::getKickoffAt)
                         .thenComparing(MatchGame::getMatchNo))
                 .orElse(null);
@@ -130,11 +137,30 @@ public class TournamentLivePanelService {
         );
     }
 
+    private boolean isFinished(MatchGame match) {
+        if (match == null) {
+            return false;
+        }
+
+        if ("FINISHED".equalsIgnoreCase(nullToEmpty(match.getApiStatus()))) {
+            return true;
+        }
+
+        return "MANUAL".equalsIgnoreCase(nullToEmpty(match.getScoreSource()))
+                && "Y".equalsIgnoreCase(nullToEmpty(match.getScoreValidatedYn()))
+                && match.getScoreA() != null
+                && match.getScoreB() != null;
+    }
+
     private String compactStage(MatchGame match) {
         if (match.getGroupName() != null && !match.getGroupName().isBlank()) {
             return match.getGroupName();
         }
 
         return match.getStage() == null ? "" : match.getStage();
+    }
+
+    private String nullToEmpty(String value) {
+        return value == null ? "" : value;
     }
 }
