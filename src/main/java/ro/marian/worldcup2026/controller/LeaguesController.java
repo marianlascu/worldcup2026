@@ -537,7 +537,27 @@ public class LeaguesController {
                 })
                 .toList();
 
-        model.addAttribute("predictionMatrixPlayers", predictionMatrixPlayers);        
+        model.addAttribute("predictionMatrixPlayers", predictionMatrixPlayers);    
+        
+        List<WinnerPrediction> winnerPredictions =
+                winnerPredictionRepository.findByLeagueIdOrderByTeamNameAsc(id);
+
+        List<WinnerPickRow> winnerPickRows = winnerPredictions.stream()
+                .map(w -> {
+                    AppUser user = usersById.get(w.getUserId());
+
+                    String fullName = user == null
+                            ? "User " + w.getUserId()
+                            : user.getFullName();
+
+                    return new WinnerPickRow(
+                            fullName,
+                            w.getTeamName()
+                    );
+                })
+                .toList();
+
+        model.addAttribute("winnerPickRows", winnerPickRows);       
 
         return view;
     }  
@@ -932,5 +952,11 @@ public class LeaguesController {
                 || s.contains("3rd")
                 || s.matches(".*\\b[123][a-h]\\b.*")
                 || s.matches(".*\\b[123]\\s*[a-h]\\b.*");
+    } 
+    
+    public record WinnerPickRow(
+            String fullName,
+            String teamName
+    ) {
     }    
 }

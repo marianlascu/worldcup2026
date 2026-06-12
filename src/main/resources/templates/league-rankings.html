@@ -4,28 +4,14 @@
 
 <div th:fragment="content">
 
-    <div style="display:flex;
-                gap:12px;
-                width:100%;
-                align-items:flex-start;
-                overflow:visible !important;">
+    <div class="rankings-mobile-layout">
 
-        <!-- LEFT: Rankings compact 30% -->
-        <section class="card league-inline-card"
-                 style="flex:0 0 25%;
-                        min-width:240px;
-                        padding:8px 10px;
-                        overflow:visible !important;
-                        max-height:none !important;
-                        height:auto !important;">
+        <!-- LEFT: Rankings -->
+        <section class="card league-inline-card rankings-panel">
 
-            <h4 style="margin:0 0 6px 0; font-size:0.95rem;">Rankings</h4>
+            <h4 class="rankings-panel-title">Rankings</h4>
 
-            <div class="rankings-scroll"
-                 style="width:100%;
-                        max-height:430px;
-                        overflow:auto !important;
-                        border-radius:10px;">
+            <div class="rankings-scroll">
                 <table class="simple-table rankings-compact-table">
                     <thead>
                     <tr>
@@ -47,34 +33,60 @@
                         <td class="rank-exact4" th:text="${r.exact4}">0</td>
                         <td class="rank-exact3" th:text="${r.exact3}">0</td>
                         <td class="rank-result" th:text="${r.resultCount}">0</td>
-                        <td><strong th:text="${r.points}">0</strong></td>
+                        <td>
+                            <strong th:text="${r.points}">0</strong>
+                        </td>
                     </tr>
 
                     <tr th:if="${#lists.isEmpty(rankings)}">
-                        <td colspan="6">No ranking data yet.</td>
+                        <td colspan="7">No ranking data yet.</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+            <!-- Winner predictions -->
 
+            <section class="winner-picks-box">
+
+                <h4 class="winner-picks-title">
+                    Winner predictions
+                </h4>
+
+                <div class="winner-picks-empty"
+                     th:if="${winnerPickRows == null || winnerPickRows.isEmpty()}">
+                    No winner predictions yet.
+                </div>
+
+                <div class="winner-picks-list"
+                     th:if="${winnerPickRows != null && !winnerPickRows.isEmpty()}">
+
+                    <div class="winner-pick-row"
+                         th:each="w : ${winnerPickRows}">
+
+                        <span class="winner-pick-player"
+                              th:text="${w.fullName}">
+                            Player
+                        </span>
+
+                        <span class="winner-pick-team"
+                              th:text="${w.teamName}">
+                            Brazil
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
         </section>
+     
 
-        <!-- RIGHT: Prediction analytics 70% -->
-        <section class="card league-inline-card"
-                 style="flex:1 1 70%;
-                        min-width:0;
-                        padding:8px 10px;
-                        overflow:visible !important;
-                        max-height:none !important;
-                        height:auto !important;">
+        <!-- RIGHT: Prediction analytics -->
+        <section class="card league-inline-card matrix-panel">
 
-            <h4 style="margin:0 0 6px 0; font-size:0.95rem;">Prediction analytics</h4>
+            <h4 class="rankings-panel-title">Prediction analytics</h4>
 
-            <div class="matrix-scroll"
-                 style="width:100%;
-                        max-height:430px;
-                        overflow:auto !important;
-                        border-radius:10px;">
+            <div class="matrix-scroll">
                 <table class="league-table prediction-matrix-table">
                     <thead>
                     <tr>
@@ -98,13 +110,22 @@
                     </tr>
 
                     <tr th:each="row : ${predictionMatrix}">
-                        <td class="mx-sticky mx-col-no" th:text="${row.matchNo}">1</td>
-                        <td class="mx-sticky mx-col-stage" th:text="${row.stageShort}">Gr.A</td>
+                        <td class="mx-sticky mx-col-no"
+                            th:text="${row.matchNo}">
+                            1
+                        </td>
+
+                        <td class="mx-sticky mx-col-stage"
+                            th:text="${row.stageShort}">
+                            Gr.A
+                        </td>
 
                         <td class="mx-sticky mx-col-match">
-                            <span th:text="${row.teamA}">Team A</span>
-                            <span> - </span>
-                            <span th:text="${row.teamB}">Team B</span>
+                            <div class="mx-match-mobile">
+                                <span th:text="${row.teamA}">Team A</span>
+                                <span class="mx-match-sep">-</span>
+                                <span th:text="${row.teamB}">Team B</span>
+                            </div>
                         </td>
 
                         <td class="mx-sticky mx-col-kickoff"

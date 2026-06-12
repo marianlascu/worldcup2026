@@ -44,12 +44,19 @@ public class TournamentLivePanelService {
 
         LocalDateTime now = LocalDateTime.now();
 
+        /*
+         * Last games:
+         * luam ultimele 5 meciuri terminate, dar le afisam cronologic crescator.
+         * Exemplu: daca ultimele doua sunt 1 si 2, afisam 1, 2, nu 2, 1.
+         */
         List<MatchGame> finished = matches.stream()
                 .filter(m -> m.getKickoffAt() != null)
                 .filter(m -> !m.getKickoffAt().isAfter(now))
                 .filter(m -> m.getScoreA() != null && m.getScoreB() != null)
                 .sorted(Comparator.comparing(MatchGame::getKickoffAt).reversed())
                 .limit(5)
+                .sorted(Comparator.comparing(MatchGame::getKickoffAt)
+                        .thenComparing(MatchGame::getMatchNo))
                 .toList();
 
         dto.setPastMatches(
@@ -58,11 +65,17 @@ public class TournamentLivePanelService {
                         .toList()
         );
 
+        /*
+         * Focus match:
+         * - daca exista meci inceput si fara scor final => LIVE NOW
+         * - altfel primul meci viitor => NEXT MATCH
+         */
         MatchGame liveMatch = matches.stream()
                 .filter(m -> m.getKickoffAt() != null)
                 .filter(m -> !m.getKickoffAt().isAfter(now))
                 .filter(m -> m.getScoreA() == null || m.getScoreB() == null)
-                .min(Comparator.comparing(MatchGame::getKickoffAt))
+                .min(Comparator.comparing(MatchGame::getKickoffAt)
+                        .thenComparing(MatchGame::getMatchNo))
                 .orElse(null);
 
         if (liveMatch != null) {
@@ -71,7 +84,8 @@ public class TournamentLivePanelService {
             MatchGame nextFocus = matches.stream()
                     .filter(m -> m.getKickoffAt() != null)
                     .filter(m -> m.getKickoffAt().isAfter(now))
-                    .min(Comparator.comparing(MatchGame::getKickoffAt))
+                    .min(Comparator.comparing(MatchGame::getKickoffAt)
+                            .thenComparing(MatchGame::getMatchNo))
                     .orElse(null);
 
             if (nextFocus != null) {
@@ -82,8 +96,10 @@ public class TournamentLivePanelService {
         List<MatchGame> next = matches.stream()
                 .filter(m -> m.getKickoffAt() != null)
                 .filter(m -> m.getKickoffAt().isAfter(now))
-                .filter(m -> dto.getFocusMatch() == null || !m.getId().equals(dto.getFocusMatch().getMatchId()))
-                .sorted(Comparator.comparing(MatchGame::getKickoffAt))
+                .filter(m -> dto.getFocusMatch() == null
+                        || !m.getId().equals(dto.getFocusMatch().getMatchId()))
+                .sorted(Comparator.comparing(MatchGame::getKickoffAt)
+                        .thenComparing(MatchGame::getMatchNo))
                 .limit(3)
                 .toList();
 

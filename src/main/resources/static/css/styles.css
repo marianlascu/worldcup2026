@@ -1959,3 +1959,1463 @@ thead .mx-sticky {
     }
 }
 
+/* =========================================================
+   PREDICTOR07 - MOBILE FULL OVERRIDE
+   Mobile web version, no app / no PWA
+   ========================================================= */
+
+.mobile-menu-toggle,
+.mobile-menu-button,
+.mobile-menu-backdrop,
+.mobile-menu-x {
+    display: none;
+}
+
+.mobile-side-head {
+    display: block;
+}
+
+/* =========================================================
+   MOBILE GLOBAL LAYOUT
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        font-size: 16px;
+        background-attachment: scroll;
+    }
+
+    .app-layout {
+        display: block;
+        height: 100vh;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .main-content {
+        width: 100%;
+        height: 100vh;
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .main-body {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .main-body > div {
+        height: auto;
+        min-height: 100%;
+    }
+
+    .card {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+        line-height: 1.15;
+        margin: 0;
+    }
+
+    h2,
+    h3 {
+        font-size: 18px;
+    }
+}
+
+/* =========================================================
+   MOBILE TOPBAR
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .topbar {
+        flex: 0 0 auto;
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 10px;
+    }
+
+    .topbar-title {
+        min-width: 0;
+    }
+
+    .subtitle {
+        margin-top: 2px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.72);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mobile-menu-button {
+        display: inline-flex;
+        width: 46px;
+        height: 46px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #ffd86b;
+        font-size: 26px;
+        font-weight: 900;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .user-pill {
+        max-width: 118px;
+        padding: 7px 9px;
+        font-size: 11px;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-pill .role {
+        margin-left: 4px;
+    }
+}
+
+/* =========================================================
+   MOBILE SIDE MENU DRAWER
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .side-menu {
+        position: fixed;
+        top: 0;
+        left: -285px;
+        width: 270px;
+        height: 100vh;
+        z-index: 1000;
+        padding: 16px 14px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        transition: left 0.22s ease;
+        box-shadow: 12px 0 36px rgba(0,0,0,0.55);
+    }
+
+    .mobile-menu-toggle:checked ~ .side-menu {
+        left: 0;
+    }
+
+    .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        background: rgba(0,0,0,0.62);
+    }
+
+    .mobile-menu-toggle:checked ~ .mobile-menu-backdrop {
+        display: block;
+    }
+
+    .mobile-side-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .side-title {
+        margin-bottom: 0;
+        font-size: 20px;
+    }
+
+    .mobile-menu-x {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.12);
+        color: #ffffff;
+        font-size: 30px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .side-tab {
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        font-size: 16px;
+        border-radius: 13px;
+    }
+
+    .side-live-panel {
+        max-height: none;
+        overflow: visible;
+        margin-top: 16px;
+    }
+}
+
+/* =========================================================
+   MOBILE BUTTONS / INPUTS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    input,
+    select,
+    button {
+        min-height: 42px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .small-btn,
+    .score-btn,
+    .winner-save-btn,
+    .small-save-btn {
+        min-height: 40px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .score-input {
+        width: 54px;
+        min-width: 54px;
+        height: 40px;
+        padding: 4px;
+        font-size: 16px;
+        text-align: center;
+    }
+}
+
+/* =========================================================
+   MOBILE HOME / CARDS / SUBTABS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .quick-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .quick-card {
+        min-height: 70px;
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .selected-box {
+        display: block;
+        padding: 12px;
+    }
+
+    .selected-box .small-btn {
+        margin-top: 10px;
+    }
+
+    .sub-tabs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 7px;
+        margin: 10px 0 12px 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sub-tab {
+        flex: 0 0 auto;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 14px;
+        font-size: 14px;
+        border-radius: 999px;
+    }
+}
+
+/* =========================================================
+   MOBILE TABLE STRATEGY
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    table {
+        min-width: 720px;
+    }
+
+    th,
+    td {
+        padding: 8px;
+    }
+
+    .data-table thead th,
+    table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    .main-body,
+    .tournament-body,
+    .matrix-scroll,
+    .rankings-scroll {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* =========================================================
+   MOBILE TOURNAMENT SHELL
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .card.tournament-shell {
+        height: auto;
+        min-height: 100%;
+        overflow: visible;
+    }
+
+    .tournament-freeze {
+        flex: 0 0 auto;
+    }
+
+    .tournament-body {
+        height: auto;
+        overflow: auto;
+        padding-right: 0;
+    }
+
+    .groups-grid,
+    .teams-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .group-card,
+    .team-group-card {
+        border-radius: 16px;
+    }
+
+    .group-table {
+        min-width: 640px;
+    }
+
+    .matches-table {
+        min-width: 920px;
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   MOBILE PREDICTIONS HEADER / WINNER
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .league-inline-card {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .predictions-header-row {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .predictions-header-row h3 {
+        margin-bottom: 10px;
+    }
+
+    .winner-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+        justify-content: stretch;
+        width: 100%;
+    }
+
+    .winner-form label {
+        grid-column: 1 / -1;
+        font-size: 13px;
+    }
+
+    .winner-form select {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        height: 42px;
+        font-size: 16px;
+    }
+
+    .winner-save-btn {
+        width: auto !important;
+        height: 42px;
+        line-height: normal;
+        top: 0;
+    }
+
+    .winner-current,
+    .winner-locked {
+        grid-column: 1 / -1;
+        white-space: normal;
+        line-height: 1.3;
+    }
+
+    .predictions-save-row button {
+        min-height: 46px;
+        font-size: 16px;
+        border-radius: 13px;
+    }
+}
+
+/* =========================================================
+   MOBILE RANKINGS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .rankings-scroll {
+        max-height: 210px;
+        overflow: auto !important;
+        border-radius: 14px;
+        margin-bottom: 12px;
+    }
+
+    .rankings-compact-table {
+        min-width: 560px;
+        font-size: 0.74rem;
+    }
+
+    .rankings-compact-table th,
+    .rankings-compact-table td {
+        padding: 6px 7px;
+        line-height: 1.15;
+    }
+
+    .rankings-compact-table th:nth-child(2),
+    .rankings-compact-table td:nth-child(2) {
+        min-width: 115px;
+        max-width: 150px;
+    }
+}
+
+/* =========================================================
+   MOBILE PREDICTION MATRIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .matrix-scroll {
+        max-height: calc(100vh - 310px);
+        overflow: auto !important;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .prediction-matrix-table {
+        min-width: 1080px;
+        font-size: 0.74rem;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .prediction-matrix-table th,
+    .prediction-matrix-table td {
+        padding: 6px 7px;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    .prediction-matrix-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+    }
+
+    .prediction-matrix-table .mx-col-no,
+    .prediction-matrix-table .mx-col-stage,
+    .prediction-matrix-table .mx-col-match {
+        position: sticky;
+        background: rgba(15, 23, 42, 1) !important;
+        color: #ffffff !important;
+    }
+
+    .prediction-matrix-table thead .mx-col-no,
+    .prediction-matrix-table thead .mx-col-stage,
+    .prediction-matrix-table thead .mx-col-match {
+        z-index: 60;
+    }
+
+    .prediction-matrix-table tbody .mx-col-no,
+    .prediction-matrix-table tbody .mx-col-stage,
+    .prediction-matrix-table tbody .mx-col-match {
+        z-index: 25;
+    }
+
+    .prediction-matrix-table .mx-col-no {
+        left: 0;
+        min-width: 38px;
+        width: 38px;
+    }
+
+    .prediction-matrix-table .mx-col-stage {
+        left: 38px;
+        min-width: 52px;
+        width: 52px;
+    }
+
+    .prediction-matrix-table .mx-col-match {
+        left: 90px;
+        min-width: 170px;
+        width: 170px;
+        max-width: 170px;
+        text-align: left !important;
+        box-shadow: 4px 0 8px rgba(0,0,0,0.42);
+    }
+
+    .mx-player-cell,
+    .mx-player-head {
+        width: 66px;
+        min-width: 66px;
+        max-width: 66px;
+    }
+
+    .mx-points {
+        display: block;
+        margin-left: 0;
+        margin-top: 2px;
+        font-size: 0.65rem;
+    }
+}
+
+/* =========================================================
+   MOBILE KNOCK-OUT
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .ko-bracket {
+        transform: scale(0.52);
+        transform-origin: top left;
+        width: 195%;
+        min-width: 1100px;
+        padding: 8px;
+    }
+
+    .ko-trophy {
+        font-size: 130px;
+    }
+
+    .ko-card {
+        border-radius: 14px;
+    }
+
+    .ko-team-row {
+        min-height: 32px;
+    }
+
+    .ko-team-row span {
+        font-size: 12px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .main-content {
+        padding: 8px;
+    }
+
+    .topbar {
+        grid-template-columns: 44px minmax(0, 1fr) auto;
+        gap: 7px;
+    }
+
+    .mobile-menu-button {
+        width: 44px;
+        height: 44px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .subtitle {
+        display: none;
+    }
+
+    .user-pill {
+        max-width: 92px;
+        font-size: 10px;
+    }
+
+    .card {
+        padding: 11px;
+    }
+
+    .matrix-scroll {
+        max-height: calc(100vh - 285px);
+    }
+
+    .prediction-matrix-table {
+        min-width: 1030px;
+        font-size: 0.68rem;
+    }
+
+    .prediction-matrix-table .mx-col-no {
+        min-width: 34px;
+        width: 34px;
+    }
+
+    .prediction-matrix-table .mx-col-stage {
+        left: 34px;
+        min-width: 46px;
+        width: 46px;
+    }
+
+    .prediction-matrix-table .mx-col-match {
+        left: 80px;
+        min-width: 150px;
+        width: 150px;
+        max-width: 150px;
+    }
+
+    .mx-player-cell,
+    .mx-player-head {
+        width: 58px;
+        min-width: 58px;
+        max-width: 58px;
+    }
+}
+
+/* =========================================================
+   MOBILE FIX - TOURNAMENT TABLES HORIZONTAL SCROLL PER GROUP
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .group-card {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .group-card .group-title {
+        min-width: 640px;
+    }
+
+    .group-card .group-table {
+        min-width: 640px;
+        width: 640px;
+    }
+}
+
+/* =========================================================
+   MOBILE LOGIN
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .login-box {
+        width: auto;
+        margin: 40px 16px;
+        padding: 20px;
+    }
+}
+
+/* =========================================================
+   TOURNAMENT TABS SPACING
+   ========================================================= */
+
+.sub-tabs {
+    margin: 18px 0 18px 0;
+}
+
+/* =========================================================
+   RANKINGS PAGE - DESKTOP + MOBILE CLEAN LAYOUT
+   ========================================================= */
+
+.rankings-mobile-layout {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    align-items: flex-start;
+    overflow: visible !important;
+}
+
+.rankings-panel {
+    flex: 0 0 25%;
+    min-width: 240px;
+    padding: 1px 1px;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+}
+
+.matrix-panel {
+    flex: 1 1 70%;
+    min-width: 0;
+    padding: 1px 1px;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+}
+
+@media (max-width: 768px) {
+
+    .rankings-mobile-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        overflow: visible !important;
+    }
+
+    .rankings-panel,
+    .matrix-panel {
+        width: 100%;
+        min-width: 0;
+        flex: none;
+        box-sizing: border-box;
+    }
+
+    .rankings-scroll {
+        width: 100%;
+        max-height: 240px !important;
+        overflow: auto !important;
+    }
+
+    .matrix-scroll {
+        width: 100%;
+        max-width: 100%;
+        min-height: 260px;
+        max-height: 420px !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .prediction-matrix-table {
+        min-width: 1180px !important;
+        width: max-content !important;
+    }
+}
+
+/* =========================================================
+   RANKINGS PAGE - RESTORE BOX SCROLL + STICKY COLUMNS
+   ========================================================= */
+
+.rankings-mobile-layout {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden !important;
+}
+
+.rankings-panel,
+.matrix-panel {
+    overflow: hidden !important;
+    height: 100%;
+    min-height: 0;
+}
+
+.rankings-panel .rankings-scroll,
+.matrix-panel .matrix-scroll {
+    max-height: none !important;
+    height: calc(100vh - 185px);
+    overflow: auto !important;
+}
+
+/* Ranking: freeze până după Player */
+.rankings-compact-table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.rankings-compact-table th:nth-child(1),
+.rankings-compact-table td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+    background: #ffffff;
+}
+
+.rankings-compact-table th:nth-child(2),
+.rankings-compact-table td:nth-child(2) {
+    position: sticky;
+    left: 32px;
+    z-index: 20;
+    background: #ffffff;
+    box-shadow: 4px 0 6px rgba(0,0,0,0.25);
+}
+
+.rankings-compact-table thead th:nth-child(1),
+.rankings-compact-table thead th:nth-child(2) {
+    z-index: 40;
+    background: #12345a;
+    color: #ffffff;
+}
+
+/* Matrix: freeze până după Match */
+.prediction-matrix-table .mx-col-no,
+.prediction-matrix-table .mx-col-stage,
+.prediction-matrix-table .mx-col-match {
+    position: sticky !important;
+    background: rgba(15, 23, 42, 1) !important;
+    color: #ffffff !important;
+}
+
+.prediction-matrix-table .mx-col-no {
+    left: 0 !important;
+}
+
+.prediction-matrix-table .mx-col-stage {
+    left: 42px !important;
+}
+
+.prediction-matrix-table .mx-col-match {
+    left: 100px !important;
+    box-shadow: 4px 0 8px rgba(0,0,0,0.45);
+}
+
+.prediction-matrix-table thead .mx-col-no,
+.prediction-matrix-table thead .mx-col-stage,
+.prediction-matrix-table thead .mx-col-match {
+    z-index: 60 !important;
+}
+
+.prediction-matrix-table tbody .mx-col-no,
+.prediction-matrix-table tbody .mx-col-stage,
+.prediction-matrix-table tbody .mx-col-match {
+    z-index: 30 !important;
+}
+
+/* Mobile: ranking sus, matrix jos, fiecare cu scroll propriu */
+@media (max-width: 768px) {
+
+    .rankings-mobile-layout {
+        height: auto;
+        overflow: visible !important;
+    }
+
+    .rankings-panel,
+    .matrix-panel {
+        height: auto;
+        overflow: hidden !important;
+    }
+
+    .rankings-panel .rankings-scroll {
+        height: 240px;
+        max-height: 240px !important;
+    }
+
+    .matrix-panel .matrix-scroll {
+        height: 420px;
+        max-height: 420px !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+    }
+
+    .rankings-compact-table th:nth-child(2),
+    .rankings-compact-table td:nth-child(2) {
+        left: 34px;
+    }
+
+    .prediction-matrix-table .mx-col-stage {
+        left: 38px !important;
+    }
+
+    .prediction-matrix-table .mx-col-match {
+        left: 90px !important;
+    }
+}
+
+/* =========================================================
+   MOBILE FORCE STICKY - RANKINGS + MATRIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- Rankings freeze: # + Player ---------- */
+
+    .rankings-panel .rankings-scroll {
+        position: relative;
+        overflow: auto !important;
+    }
+
+    .rankings-panel .rankings-compact-table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        min-width: 560px !important;
+    }
+
+    .rankings-panel .rankings-compact-table th:nth-child(1),
+    .rankings-panel .rankings-compact-table td:nth-child(1) {
+        position: sticky !important;
+        left: 0 !important;
+        min-width: 36px !important;
+        width: 36px !important;
+        z-index: 50 !important;
+        background: #ffffff !important;
+        color: #111 !important;
+    }
+
+    .rankings-panel .rankings-compact-table th:nth-child(2),
+    .rankings-panel .rankings-compact-table td:nth-child(2) {
+        position: sticky !important;
+        left: 36px !important;
+        min-width: 120px !important;
+        width: 120px !important;
+        max-width: 120px !important;
+        z-index: 50 !important;
+        background: #ffffff !important;
+        color: #111 !important;
+        box-shadow: 4px 0 8px rgba(0,0,0,0.28);
+    }
+
+    .rankings-panel .rankings-compact-table thead th:nth-child(1),
+    .rankings-panel .rankings-compact-table thead th:nth-child(2) {
+        z-index: 90 !important;
+        background: #12345a !important;
+        color: #ffffff !important;
+    }
+
+    /* ---------- Matrix freeze: No + Stage + Match ---------- */
+
+    .matrix-panel .matrix-scroll {
+        position: relative;
+        overflow: auto !important;
+    }
+
+    .matrix-panel .prediction-matrix-table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        min-width: 1180px !important;
+        width: max-content !important;
+    }
+
+    .matrix-panel .prediction-matrix-table .mx-col-no {
+        position: sticky !important;
+        left: 0 !important;
+        min-width: 42px !important;
+        width: 42px !important;
+        z-index: 60 !important;
+        background: rgba(15, 23, 42, 1) !important;
+        color: #ffffff !important;
+    }
+
+    .matrix-panel .prediction-matrix-table .mx-col-stage {
+        position: sticky !important;
+        left: 42px !important;
+        min-width: 58px !important;
+        width: 58px !important;
+        z-index: 60 !important;
+        background: rgba(15, 23, 42, 1) !important;
+        color: #ffffff !important;
+    }
+
+    .matrix-panel .prediction-matrix-table .mx-col-match {
+        position: sticky !important;
+        left: 100px !important;
+        min-width: 210px !important;
+        width: 210px !important;
+        max-width: 210px !important;
+        z-index: 60 !important;
+        background: rgba(15, 23, 42, 1) !important;
+        color: #ffffff !important;
+        box-shadow: 4px 0 8px rgba(0,0,0,0.45);
+    }
+
+    .matrix-panel .prediction-matrix-table thead .mx-col-no,
+    .matrix-panel .prediction-matrix-table thead .mx-col-stage,
+    .matrix-panel .prediction-matrix-table thead .mx-col-match {
+        z-index: 100 !important;
+        background: rgba(51, 65, 85, 1) !important;
+    }
+}
+
+/* =========================================================
+   FINAL MOBILE STICKY FIX - RANKINGS + MATRIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .rankings-scroll,
+    .matrix-scroll {
+        position: relative !important;
+        overflow: auto !important;
+        transform: none !important;
+    }
+
+    .rankings-scroll table,
+    .matrix-scroll table {
+        overflow: visible !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    /* Rankings: sticky # */
+    .rankings-scroll .rankings-compact-table th:nth-child(1),
+    .rankings-scroll .rankings-compact-table td:nth-child(1) {
+        position: sticky !important;
+        left: 0 !important;
+        z-index: 80 !important;
+        min-width: 36px !important;
+        width: 36px !important;
+        background: #ffffff !important;
+        color: #111 !important;
+    }
+
+    /* Rankings: sticky Player */
+    .rankings-scroll .rankings-compact-table th:nth-child(2),
+    .rankings-scroll .rankings-compact-table td:nth-child(2) {
+        position: sticky !important;
+        left: 36px !important;
+        z-index: 80 !important;
+        min-width: 125px !important;
+        width: 125px !important;
+        max-width: 125px !important;
+        background: #ffffff !important;
+        color: #111 !important;
+        box-shadow: 4px 0 8px rgba(0,0,0,0.35);
+    }
+
+    .rankings-scroll .rankings-compact-table thead th:nth-child(1),
+    .rankings-scroll .rankings-compact-table thead th:nth-child(2) {
+        z-index: 120 !important;
+        background: #12345a !important;
+        color: #ffffff !important;
+    }
+
+    /* Matrix: sticky No */
+    .matrix-scroll .prediction-matrix-table .mx-col-no {
+        position: sticky !important;
+        left: 0 !important;
+        z-index: 90 !important;
+        min-width: 42px !important;
+        width: 42px !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+    }
+
+    /* Matrix: sticky Stage */
+    .matrix-scroll .prediction-matrix-table .mx-col-stage {
+        position: sticky !important;
+        left: 42px !important;
+        z-index: 90 !important;
+        min-width: 58px !important;
+        width: 58px !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+    }
+
+    /* Matrix: sticky Match */
+    .matrix-scroll .prediction-matrix-table .mx-col-match {
+        position: sticky !important;
+        left: 100px !important;
+        z-index: 90 !important;
+        min-width: 220px !important;
+        width: 220px !important;
+        max-width: 220px !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+        box-shadow: 5px 0 10px rgba(0,0,0,0.48);
+    }
+
+    .matrix-scroll .prediction-matrix-table thead .mx-col-no,
+    .matrix-scroll .prediction-matrix-table thead .mx-col-stage,
+    .matrix-scroll .prediction-matrix-table thead .mx-col-match {
+        z-index: 140 !important;
+        background: #334155 !important;
+        color: #ffffff !important;
+    }
+}
+
+/* =========================================================
+   MOBILE FINAL - COMPACT RANKINGS + MATRIX STICKY WIDTH FIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- Rankings compact ---------- */
+
+    .rankings-scroll .rankings-compact-table {
+        min-width: 460px !important;
+        font-size: 11px !important;
+    }
+
+    .rankings-scroll .rankings-compact-table th,
+    .rankings-scroll .rankings-compact-table td {
+        padding: 4px 5px !important;
+    }
+
+    .rankings-scroll .rankings-compact-table th:nth-child(1),
+    .rankings-scroll .rankings-compact-table td:nth-child(1) {
+        min-width: 28px !important;
+        width: 28px !important;
+        max-width: 28px !important;
+        left: 0 !important;
+    }
+
+    .rankings-scroll .rankings-compact-table th:nth-child(2),
+    .rankings-scroll .rankings-compact-table td:nth-child(2) {
+        min-width: 82px !important;
+        width: 82px !important;
+        max-width: 82px !important;
+        left: 28px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .rankings-scroll .rankings-compact-table th:nth-child(n+3),
+    .rankings-scroll .rankings-compact-table td:nth-child(n+3) {
+        min-width: 42px !important;
+        width: 42px !important;
+        max-width: 42px !important;
+        text-align: center !important;
+    }
+
+    /* ---------- Matrix: reduce frozen area ---------- */
+
+    .matrix-scroll {
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table {
+        min-width: 1050px !important;
+        width: max-content !important;
+        font-size: 11px !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table th,
+    .matrix-scroll .prediction-matrix-table td {
+        padding: 5px 6px !important;
+        white-space: nowrap !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table .mx-col-no {
+        left: 0 !important;
+        min-width: 32px !important;
+        width: 32px !important;
+        max-width: 32px !important;
+        overflow: hidden !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table .mx-col-stage {
+        left: 32px !important;
+        min-width: 44px !important;
+        width: 44px !important;
+        max-width: 44px !important;
+        overflow: hidden !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table .mx-col-match {
+        left: 76px !important;
+        min-width: 138px !important;
+        width: 138px !important;
+        max-width: 138px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        box-shadow: 4px 0 8px rgba(0,0,0,0.50);
+    }
+
+    .matrix-scroll .prediction-matrix-table .mx-col-kickoff,
+    .matrix-scroll .prediction-matrix-table .mx-col-official {
+        position: static !important;
+        left: auto !important;
+        z-index: auto !important;
+    }
+
+    .matrix-scroll .mx-player-cell,
+    .matrix-scroll .mx-player-head {
+        min-width: 54px !important;
+        width: 54px !important;
+        max-width: 54px !important;
+        text-align: center !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table tbody .mx-col-no,
+    .matrix-scroll .prediction-matrix-table tbody .mx-col-stage,
+    .matrix-scroll .prediction-matrix-table tbody .mx-col-match {
+        z-index: 30 !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+    }
+
+    .matrix-scroll .prediction-matrix-table thead .mx-col-no,
+    .matrix-scroll .prediction-matrix-table thead .mx-col-stage,
+    .matrix-scroll .prediction-matrix-table thead .mx-col-match {
+        z-index: 80 !important;
+        background: #334155 !important;
+        color: #ffffff !important;
+    }
+}
+
+/* =========================================================
+   MOBILE MATRIX - STACK MATCH TEAMS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .matrix-scroll .prediction-matrix-table .mx-col-match {
+        min-width: 96px !important;
+        width: 96px !important;
+        max-width: 96px !important;
+        left: 76px !important;
+    }
+
+    .mx-match-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        max-width: 88px;
+        overflow: hidden;
+        line-height: 1.08;
+    }
+
+    .mx-match-mobile span {
+        display: block;
+        max-width: 88px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mx-match-sep {
+        opacity: 0.55;
+        font-size: 10px;
+        line-height: 0.9;
+    }
+}
+
+/* =========================================================
+   WINNER PREDICTIONS BOX
+   ========================================================= */
+
+.winner-picks-box {
+    margin-top: 12px;
+    padding: 10px;
+
+    border-radius: 12px;
+
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(255,255,255,0.14);
+}
+
+.winner-picks-title {
+    margin: 0 0 8px 0;
+
+    color: #ffd86b;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.winner-picks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.winner-pick-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+
+    align-items: center;
+
+    padding: 5px 7px;
+
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+}
+
+.winner-pick-player {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #ffffff;
+    font-size: 0.75rem;
+}
+
+.winner-pick-team {
+    color: #bbf7d0;
+    font-size: 0.75rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.winner-picks-empty {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+
+    .winner-pick-row {
+        min-height: 34px;
+    }
+
+    .winner-pick-player,
+    .winner-pick-team {
+        font-size: 0.8rem;
+    }
+}
+
+/* =========================================================
+   DESKTOP FIX - REMOVE GAP ABOVE WINNER PREDICTIONS
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+    .rankings-panel {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .rankings-panel .rankings-scroll {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+    }
+
+    .winner-picks-box {
+        margin-top: 8px !important;
+    }
+}
+
+/* =========================================================
+   SIDE LIVE PANEL - FOCUS LABEL LIVE COLOR
+   ========================================================= */
+
+.side-live-focus-label.is-live {
+    color: #ef4444;
+}
+
+/* =========================================================
+   SIDE LIVE PANEL - FOCUS COUNTDOWN
+   ========================================================= */
+
+.side-live-focus-countdown {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #4ade80;
+    font-weight: 900;
+    text-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+}
+
+.side-live-title {
+    text-align: center;
+}
+
+#winnerTeam:disabled {
+    color: #ffff00 !important;
+    font-weight: 900 !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #ffff00 !important;
+
+    background: rgba(255,255,0,0.08) !important;
+    border: 1px solid rgba(255,255,0,0.35) !important;
+}
+
+.winner-locked {
+    display: inline-block;
+
+    padding: 3px 8px;
+
+    background: #ef4444;
+    color: #ffffff;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   MATCHES WARNING BOX
+   ========================================================= */
+
+.matches-warning-box {
+    margin-bottom: 14px;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 216, 107, 0.15);
+    border: 1px solid rgba(255, 216, 107, 0.45);
+}
+
+.matches-warning-title {
+    color: #ffd86b;
+    font-weight: 900;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+/* =========================================================
+   MATCHES WARNING BOX
+   ========================================================= */
+
+.matches-warning-box {
+    margin-bottom: 14px;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    background: rgba(220, 38, 38, 0.18);
+    border: 2px solid rgba(239, 68, 68, 0.75);
+
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+}
+
+.matches-warning-title {
+    color: #ff4d4d;
+    font-weight: 900;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.matches-warning-text {
+    color: #ffffff;
+    line-height: 1.45;
+}
+
+.matches-warning-text strong {
+    color: #ffd86b;
+}

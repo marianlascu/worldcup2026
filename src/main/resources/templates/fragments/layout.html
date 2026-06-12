@@ -10,10 +10,15 @@
                    'background-image: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.72)), url(/img/' + ${pageBgImage} + ')'
                    : null">
 
+        <input type="checkbox" id="mobileMenuToggle" class="mobile-menu-toggle">
+
+        <label for="mobileMenuToggle" class="mobile-menu-backdrop"></label>
+
         <aside class="side-menu">
 
-            <div class="side-title">
-                Sport Predictor
+            <div class="mobile-side-head">
+                <div class="side-title">Sport Predictor</div>
+                <label for="mobileMenuToggle" class="mobile-menu-x">×</label>
             </div>
 
             <a th:class="${activeTab == 'main'} ? 'side-tab active' : 'side-tab'" href="/main">Home</a>
@@ -24,26 +29,20 @@
             <div class="side-live-panel"
                  th:if="${livePanel != null and !livePanel.empty}">
 
-                <div class="side-live-title">
-                    LIVE NOW
-                </div>
+                <div class="side-live-title">CURRENT GAMES</div>
 
                 <div class="side-live-section"
                      th:if="${livePanel.pastMatches != null and !livePanel.pastMatches.isEmpty()}">
 
                     <div class="side-live-label">Last games</div>
 
-                    <div class="side-live-line"
-                         th:each="m : ${livePanel.pastMatches}">
-
+                    <div class="side-live-line" th:each="m : ${livePanel.pastMatches}">
                         <span class="side-live-no" th:text="${m.matchNo}">1</span>
-
                         <span class="side-live-teams">
                             <span th:text="${m.teamA}">A</span>
                             <span>-</span>
                             <span th:text="${m.teamB}">B</span>
                         </span>
-
                         <span class="side-live-score" th:text="${m.scoreText}">2-1</span>
                     </div>
                 </div>
@@ -52,8 +51,9 @@
                      th:if="${livePanel.focusMatch != null}"
                      th:classappend="${livePanel.focusMatch.live} ? ' is-live' : ''">
 
-                    <div class="side-live-label"
-                         th:text="${livePanel.focusMatch.live} ? 'LIVE MATCH' : 'NEXT MATCH'">
+                    <div class="side-live-label side-live-focus-label"
+                         th:classappend="${livePanel.focusMatch.live} ? ' is-live' : ''"
+                         th:text="${livePanel.focusMatch.live} ? 'LIVE NOW' : 'NEXT MATCH'">
                         NEXT MATCH
                     </div>
 
@@ -75,9 +75,17 @@
                     </div>
 
                     <div class="side-live-focus-time"
-                         th:if="${!livePanel.focusMatch.live and livePanel.focusMatch.kickoffAt != null}"
-                         th:text="${#temporals.format(livePanel.focusMatch.kickoffAt, 'dd.MM HH:mm')}">
-                        11.06 22:00
+                         th:if="${!livePanel.focusMatch.live and livePanel.focusMatch.kickoffAt != null}">
+
+                        <div th:text="${#temporals.format(livePanel.focusMatch.kickoffAt, 'dd.MM HH:mm')}">
+                            11.06 22:00
+                        </div>
+
+                        <div class="side-live-focus-countdown kickoff-countdown"
+                             th:attr="data-kickoff=${#temporals.format(livePanel.focusMatch.kickoffAt, 'yyyy-MM-dd''T''HH:mm:ss')}">
+                            -
+                        </div>
+
                     </div>
                 </div>
 
@@ -86,17 +94,13 @@
 
                     <div class="side-live-label">Next games</div>
 
-                    <div class="side-live-line"
-                         th:each="m : ${livePanel.nextMatches}">
-
+                    <div class="side-live-line" th:each="m : ${livePanel.nextMatches}">
                         <span class="side-live-no" th:text="${m.matchNo}">2</span>
-
                         <span class="side-live-teams">
                             <span th:text="${m.teamA}">A</span>
                             <span>-</span>
                             <span th:text="${m.teamB}">B</span>
                         </span>
-
                         <span class="side-live-time"
                               th:text="${m.kickoffAt == null ? '-' : #temporals.format(m.kickoffAt, 'dd.MM HH:mm')}">
                             12.06
@@ -116,7 +120,9 @@
 
             <div class="topbar">
 
-                <div>
+                <label for="mobileMenuToggle" class="mobile-menu-button">☰</label>
+
+                <div class="topbar-title">
                     <h1 th:text="${pageTitle}">Page title</h1>
                     <div class="subtitle">Sports prediction platform</div>
                 </div>
@@ -133,7 +139,9 @@
         </main>
 
     </div>
-<script src="/js/kickoff-countdown.js"></script>
+
+    <script src="/js/kickoff-countdown.js"></script>
+
 </div>
 
 </body>

@@ -5,7 +5,20 @@
 <div th:fragment="content">
 
     <div class="matches-toolbar">
+        <div class="matches-warning-box">
 
+            <div class="matches-warning-title">
+                ⚠ IMPORTANT
+            </div>
+
+            <div class="matches-warning-text">
+                Aici sunt scorurile oficiale ale turneului!!!
+                Scorurile se introduc manual doar dacă nu sunt preluate automat din API.
+                Pentru introducerea predicțiilor accesați
+                <strong>Leagues → Liga dumneavoastră → Predictions</strong>.
+            </div>
+
+        </div>
         <form method="post"
               th:action="@{/tournaments/{id}/sync-football-data(id=${selectedTournamentId})}"
               class="inline-action-form">
