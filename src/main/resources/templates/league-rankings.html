@@ -99,7 +99,7 @@
 
                     <tr th:each="row : ${predictionMatrix}">
                         <td class="mx-sticky mx-col-no" th:text="${row.matchNo}">1</td>
-                        <td class="mx-sticky mx-col-stage" th:text="${row.stage}">Gr.A</td>
+                        <td class="mx-sticky mx-col-stage" th:text="${row.stageShort}">Gr.A</td>
 
                         <td class="mx-sticky mx-col-match">
                             <span th:text="${row.teamA}">Team A</span>

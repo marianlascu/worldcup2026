@@ -43,6 +43,18 @@ public class RankingPredictionMatrixRow {
     public String getStage() {
         return stage;
     }
+    
+    public String getStageShort() {
+        if ("ROUND_OF_32".equals(stage)) {
+            return "R32";
+        }
+
+        if ("ROUND_OF_16".equals(stage)) {
+            return "R16";
+        }
+
+        return stage;
+    }      
 
     public void setStage(String stage) {
         this.stage = stage;

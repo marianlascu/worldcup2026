@@ -34,6 +34,13 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        
+        boolean dataLoaderEnabled = false;
+
+        if (!dataLoaderEnabled) {
+            System.out.println("[DATA-LOADER] Disabled permanently on VPS/persistent DB.");
+            return;
+        }
 
         loadUsersIfMissing();
         loadTournamentsIfMissing();
