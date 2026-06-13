@@ -518,7 +518,25 @@ public class LeaguesController {
 
         List<RankingRow> rankings = members.stream()
                 .map(member -> buildRankingRow(member, usersById, predictions, matchesById))
-                .sorted(java.util.Comparator.comparingInt(RankingRow::getPoints).reversed()
+                .sorted(java.util.Comparator
+                        .comparingInt(RankingRow::getPoints)
+                        .reversed()
+
+                        .thenComparing(
+                                java.util.Comparator.comparingInt(RankingRow::getExact4)
+                                        .reversed()
+                        )
+
+                        .thenComparing(
+                                java.util.Comparator.comparingInt(RankingRow::getExact3)
+                                        .reversed()
+                        )
+
+                        .thenComparing(
+                                java.util.Comparator.comparingInt(RankingRow::getResultCount)
+                                        .reversed()
+                        )
+
                         .thenComparing(RankingRow::getFullName))
                 .toList();
 
