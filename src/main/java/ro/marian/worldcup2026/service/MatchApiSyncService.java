@@ -46,16 +46,24 @@ public class MatchApiSyncService {
             MatchGame localMatch = findLocalMatch(apiMatch, localMatches);
 
             if (localMatch == null) {
-                unmatched++;
 
-                System.out.println("[FOOTBALL-DATA SYNC] UNMATCHED: "
-                        + apiMatch.getHomeTeamName()
-                        + " - "
-                        + apiMatch.getAwayTeamName()
-                        + " / status="
-                        + apiMatch.getStatus()
-                        + " / kickoff="
-                        + apiMatch.getUtcKickoffAt());
+                boolean bothTeamsMissing =
+                        apiMatch.getHomeTeamName() == null
+                        && apiMatch.getAwayTeamName() == null;
+
+                if (!bothTeamsMissing) {
+
+                    unmatched++;
+
+                    System.out.println("[FOOTBALL-DATA SYNC] UNMATCHED: "
+                            + apiMatch.getHomeTeamName()
+                            + " - "
+                            + apiMatch.getAwayTeamName()
+                            + " / status="
+                            + apiMatch.getStatus()
+                            + " / kickoff="
+                            + apiMatch.getUtcKickoffAt());
+                }
 
                 continue;
             }
