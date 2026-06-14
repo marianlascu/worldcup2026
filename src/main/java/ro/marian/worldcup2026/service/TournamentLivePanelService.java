@@ -60,7 +60,7 @@ public class TournamentLivePanelService {
                 .filter(m -> !m.getKickoffAt().isAfter(now))
                 .filter(this::isFinished)
                 .sorted(Comparator.comparing(MatchGame::getKickoffAt).reversed())
-                .limit(5)
+                .limit(3)
                 .sorted(Comparator.comparing(MatchGame::getKickoffAt)
                         .thenComparing(MatchGame::getMatchNo))
                 .toList();

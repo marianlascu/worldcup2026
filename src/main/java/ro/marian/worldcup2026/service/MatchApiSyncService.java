@@ -162,41 +162,38 @@ public class MatchApiSyncService {
             changed = true;
         }
 
-        /*
-         * API self-validation:
-         * Daca API-ul trimite scor complet, scorul devine oficial imediat.
-         * Nu mai este necesar buton Validate API.
-         *
-         * Atentie:
-         * Meciul NU este considerat finished doar pentru ca are scoreA/scoreB.
-         * Finished se decide separat prin apiStatus = FINISHED
-         * sau manual validate.
-         */
         if (apiMatch.getHomeScore() != null && apiMatch.getAwayScore() != null) {
+
+            boolean officialChanged = false;
 
             if (!equalsInteger(match.getScoreA(), apiMatch.getHomeScore())) {
                 match.setScoreA(apiMatch.getHomeScore());
                 changed = true;
+                officialChanged = true;
             }
 
             if (!equalsInteger(match.getScoreB(), apiMatch.getAwayScore())) {
                 match.setScoreB(apiMatch.getAwayScore());
                 changed = true;
+                officialChanged = true;
             }
 
             if (!equalsString(match.getScoreSource(), "API")) {
                 match.setScoreSource("API");
                 changed = true;
+                officialChanged = true;
             }
 
             if (!equalsString(match.getScoreValidatedYn(), "Y")) {
                 match.setScoreValidatedYn("Y");
                 changed = true;
+                officialChanged = true;
             }
 
-            match.setScoreValidatedAt(LocalDateTime.now());
-            match.setScoreValidatedBy("API");
-            changed = true;
+            if (officialChanged) {
+                match.setScoreValidatedAt(LocalDateTime.now());
+                match.setScoreValidatedBy("API");
+            }
         }
 
         if (changed) {
