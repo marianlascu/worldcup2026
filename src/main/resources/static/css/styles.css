@@ -3487,3 +3487,195 @@ thead .mx-sticky {
     color: #facc15;
     border: 1px solid rgba(250, 204, 21, 0.5);
 }
+
+/* =========================================================
+   LEAGUE OVERVIEW SETTINGS
+   ========================================================= */
+
+.league-edit-box {
+    margin-top: 18px;
+    padding: 16px;
+
+    border-radius: 14px;
+    background: rgba(10, 20, 35, 0.78);
+    border: 1px solid rgba(255,255,255,0.16);
+}
+
+.league-edit-header {
+    margin-bottom: 14px;
+}
+
+.league-edit-header h3 {
+    margin: 0;
+    color: #ffd86b;
+}
+
+.league-edit-header span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.72);
+    font-size: 0.9rem;
+}
+
+.league-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.league-edit-card {
+    padding: 12px;
+
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.13);
+}
+
+.league-edit-card label {
+    display: block;
+    margin-bottom: 7px;
+
+    color: rgba(255,255,255,0.78);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.league-edit-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.league-edit-row input {
+    flex: 1;
+    min-width: 0;
+    margin-top: 0;
+}
+
+.league-edit-row button {
+    flex: 0 0 auto;
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+
+    .league-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .league-edit-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .league-edit-row button {
+        width: 100%;
+        min-height: 42px;
+    }
+}
+
+/* =========================================================
+   MATRIX PREDICTION POPUP
+   ========================================================= */
+
+.matrix-match-row {
+    cursor: pointer;
+}
+
+.matrix-prediction-popup {
+    position: fixed;
+    z-index: 9999;
+
+    width: 310px;
+    max-height: 390px;
+    overflow: auto;
+
+    padding: 12px;
+
+    border-radius: 14px;
+    background: rgba(8, 18, 32, 0.96);
+    border: 1px solid rgba(255,255,255,0.22);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+
+    color: #ffffff;
+    font-size: 12px;
+}
+
+.matrix-popup-title {
+    color: #ffd86b;
+    font-weight: 900;
+    margin-bottom: 4px;
+}
+
+.matrix-popup-official {
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 8px;
+}
+
+.matrix-popup-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.matrix-popup-summary span {
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.10);
+    font-weight: 800;
+}
+
+.matrix-popup-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: rgba(255,255,255,0.18);
+}
+
+.matrix-popup-player-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.matrix-popup-player-row span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.matrix-popup-player-row strong {
+    color: #bbf7d0;
+}
+
+.matrix-popup-player-row em {
+    color: #ffd86b;
+    font-style: normal;
+    font-weight: 900;
+}
+
+@media (max-width: 768px) {
+    .matrix-prediction-popup {
+        left: 8px !important;
+        right: 8px !important;
+        top: 90px !important;
+        width: auto;
+        max-height: 70vh;
+    }
+}
+
+.matrix-popup-player-row.pred-4 strong {
+    color:#d8b4fe;   /* mov */
+}
+
+.matrix-popup-player-row.pred-3 strong {
+    color:#86efac;   /* verde */
+}
+
+.matrix-popup-player-row.pred-1 strong {
+    color:#fcd34d;   /* galben */
+}
+
+.matrix-popup-player-row.pred-0 strong {
+    color:#fca5a5;   /* roșu */
+}

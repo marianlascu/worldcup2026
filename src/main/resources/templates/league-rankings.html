@@ -44,8 +44,8 @@
                     </tbody>
                 </table>
             </div>
-            <!-- Winner predictions -->
 
+            <!-- Winner predictions -->
             <section class="winner-picks-box">
 
                 <h4 class="winner-picks-title">
@@ -78,8 +78,8 @@
                 </div>
 
             </section>
+
         </section>
-     
 
         <!-- RIGHT: Prediction analytics -->
         <section class="card league-inline-card matrix-panel">
@@ -109,7 +109,12 @@
                         <td colspan="20">No prediction data yet.</td>
                     </tr>
 
-                    <tr th:each="row : ${predictionMatrix}">
+                    <tr th:each="row : ${predictionMatrix}"
+                        class="matrix-match-row"
+                        th:attr="data-match-title=${row.teamA + ' - ' + row.teamB},
+                                 data-match-no=${row.matchNo},
+                                 data-official=${row.officialScoreA != null and row.officialScoreB != null ? row.officialScore : 'Not started'}">
+
                         <td class="mx-sticky mx-col-no"
                             th:text="${row.matchNo}">
                             1
@@ -148,7 +153,11 @@
 
                         <td th:each="entry : ${row.playerPredictions}"
                             class="mx-player-cell"
-                            th:classappend="${entry.value.cssClass}">
+                            th:classappend="${entry.value.cssClass}"
+                            th:attr="data-player=${entry.key},
+                                     data-prediction=${entry.value.value},
+                                     data-points=${entry.value.points == null ? '' : entry.value.points},
+                                     data-css=${entry.value.cssClass}">
                             <span th:text="${entry.value.value}">2-1</span>
                             <span class="mx-points"
                                   th:if="${entry.value.points != null}"
@@ -156,6 +165,7 @@
                                 3
                             </span>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>
@@ -164,6 +174,10 @@
         </section>
 
     </div>
+
+    <div id="matrixPredictionPopup" class="matrix-prediction-popup" hidden></div>
+
+    <script src="/js/matrix-prediction-popup.js"></script>
 
 </div>
 

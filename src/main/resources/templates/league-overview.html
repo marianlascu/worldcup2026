@@ -18,39 +18,59 @@
                 <span>Invite code</span>
             </div>
 
-            <div class="quick-card">
-                <strong>Predictions</strong>
-                <span>Coming soon</span>
-            </div>
-
-            <div class="quick-card">
-                <strong>Rankings</strong>
-                <span>Coming soon</span>
-            </div>
-
         </div>
 
-        <div th:if="${canEditLeague}" class="league-edit-box">
+        <section th:if="${canEditLeague}" class="league-edit-box">
 
-            <h3>Edit league</h3>
+            <div class="league-edit-header">
+                <h3>League settings</h3>
+                <span>Edit league name and invitation code</span>
+            </div>
 
-            <form method="post"
-                  th:action="@{/leagues/{id}/rename(id=${league.id})}"
-                  class="league-form">
+            <div class="league-edit-grid">
 
-                <div>
-                    <label>League name</label>
-                    <input type="text"
-                           name="name"
-                           required
-                           th:value="${league.name}">
+                <form method="post"
+                      th:action="@{/leagues/{id}/rename(id=${league.id})}"
+                      class="league-edit-card">
+
+                    <label for="leagueName">League name</label>
+
+                    <div class="league-edit-row">
+                        <input id="leagueName"
+                               type="text"
+                               name="name"
+                               required
+                               th:value="${league.name}">
+
+                        <button type="submit" class="small-btn">
+                            Save
+                        </button>
+                    </div>
+
+                </form>
+
+                <div class="league-edit-card">
+
+                    <label for="leagueCode">Invitation code</label>
+
+                    <div class="league-edit-row">
+                        <input id="leagueCode"
+                               type="text"
+                               readonly
+                               th:value="${league.code}">
+
+                        <button type="button"
+                                class="small-btn"
+                                onclick="navigator.clipboard.writeText(document.getElementById('leagueCode').value)">
+                            Copy
+                        </button>
+                    </div>
+
                 </div>
 
-                <button type="submit">Save</button>
+            </div>
 
-            </form>
-
-        </div>
+        </section>
 
     </div>
 
