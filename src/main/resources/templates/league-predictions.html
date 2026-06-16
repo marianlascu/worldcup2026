@@ -2,6 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<!--
+    Full page/tab content.
+    Header/form script stau în afara zonei AJAX.
+-->
 <div th:fragment="content">
 
     <section class="card league-inline-card">
@@ -62,6 +66,24 @@
              th:text="${predictionSaveMessage}">
             3 predictions saved!
         </div>
+
+        <div th:replace="~{league-predictions :: predictionsAjaxContent}"></div>
+
+    </section>
+
+</div>
+
+
+<!--
+    AJAX refresh content only.
+    Endpoint:
+        /leagues/{id}/predictions-fragment
+-->
+<div th:fragment="predictionsAjaxContent">
+
+    <div id="leaguePredictionsAjaxBox"
+         data-ajax-refresh-url=""
+         th:attr="data-ajax-refresh-url=@{/leagues/{id}/predictions-fragment(id=${league.id})}">
 
         <form id="predictionsForm"
               method="post"
@@ -153,7 +175,7 @@
 
         </form>
 
-    </section>
+    </div>
 
 </div>
 

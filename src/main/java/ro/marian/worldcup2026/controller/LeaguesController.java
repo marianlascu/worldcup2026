@@ -487,109 +487,21 @@ public class LeaguesController {
         return "redirect:/leagues/" + id + "/predictions";
     }    
     
-    @GetMapping("/leagues/{id}/rankings")
-    public String leagueRankings(@PathVariable Long id,
-                                 HttpSession session,
-                                 Model model) {
+@GetMapping("/leagues/{id}/rankings")
+public String leagueRankings(@PathVariable Long id,
+                             HttpSession session,
+                             Model model) {
 
-        String view = openLeagueTab(id, "rankings", session, model);
+    String view = openLeagueTab(id, "rankings", session, model);
 
-        if (!"league-layout".equals(view)) {
-            return view;
-        }
-
-        List<LeagueMember> members =
-                leagueMemberRepository.findByLeagueIdAndActiveYnOrderByJoinedAtAsc(id, "Y");
-
-        Map<Long, AppUser> usersById = appUserRepository.findAllById(
-                members.stream()
-                        .map(LeagueMember::getUserId)
-                        .toList()
-        ).stream().collect(Collectors.toMap(AppUser::getId, u -> u));
-
-        List<Prediction> predictions =
-                predictionRepository.findByLeagueIdOrderByUserIdAscMatchIdAsc(id);
-
-        Map<Long, MatchGame> matchesById = matchGameRepository.findAllById(
-                predictions.stream()
-                        .map(Prediction::getMatchId)
-                        .toList()
-        ).stream().collect(Collectors.toMap(MatchGame::getId, m -> m));
-
-        List<RankingRow> rankings = members.stream()
-                .map(member -> buildRankingRow(member, usersById, predictions, matchesById))
-                .sorted(java.util.Comparator
-                        .comparingInt(RankingRow::getPoints)
-                        .reversed()
-
-                        .thenComparing(
-                                java.util.Comparator.comparingInt(RankingRow::getExact4)
-                                        .reversed()
-                        )
-
-                        .thenComparing(
-                                java.util.Comparator.comparingInt(RankingRow::getExact3)
-                                        .reversed()
-                        )
-
-                        .thenComparing(
-                                java.util.Comparator.comparingInt(RankingRow::getResultCount)
-                                        .reversed()
-                        )
-
-                        .thenComparing(RankingRow::getFullName))
-                .toList();
-
-        model.addAttribute("rankings", rankings);
-        League league = (League) model.getAttribute("league");
-
-        List<MatchGame> tournamentMatches =
-                matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(
-                        league.getTournamentId()
-                );
-
-        List<RankingPredictionMatrixRow> predictionMatrix =
-                buildPredictionMatrixRows(
-                        members,
-                        usersById,
-                        predictions,
-                        tournamentMatches,
-                        currentUserId(session),
-                        isAdmin(session)
-                );
-
-        model.addAttribute("predictionMatrix", predictionMatrix); 
-        List<String> predictionMatrixPlayers = members.stream()
-                .map(m -> {
-                    AppUser user = usersById.get(m.getUserId());
-                    return user == null ? "User " + m.getUserId() : user.getFullName();
-                })
-                .toList();
-
-        model.addAttribute("predictionMatrixPlayers", predictionMatrixPlayers);    
-        
-        List<WinnerPrediction> winnerPredictions =
-                winnerPredictionRepository.findByLeagueIdOrderByTeamNameAsc(id);
-
-        List<WinnerPickRow> winnerPickRows = winnerPredictions.stream()
-                .map(w -> {
-                    AppUser user = usersById.get(w.getUserId());
-
-                    String fullName = user == null
-                            ? "User " + w.getUserId()
-                            : user.getFullName();
-
-                    return new WinnerPickRow(
-                            fullName,
-                            w.getTeamName()
-                    );
-                })
-                .toList();
-
-        model.addAttribute("winnerPickRows", winnerPickRows);       
-
+    if (!"league-layout".equals(view)) {
         return view;
-    }  
+    }
+
+    populateLeagueRankingsModel(id, session, model);
+
+    return view;
+}  
     
     @PostMapping("/leagues/{id}/winner/save")
     public String saveWinnerPrediction(@PathVariable Long id,
@@ -987,5 +899,87 @@ public class LeaguesController {
             String fullName,
             String teamName
     ) {
-    }    
+    }
+    
+    private void populateLeagueRankingsModel(Long id,
+                                             HttpSession session,
+                                             Model model) {
+
+        List<LeagueMember> members =
+                leagueMemberRepository.findByLeagueIdAndActiveYnOrderByJoinedAtAsc(id, "Y");
+
+        Map<Long, AppUser> usersById = appUserRepository.findAllById(
+                members.stream()
+                        .map(LeagueMember::getUserId)
+                        .toList()
+        ).stream().collect(Collectors.toMap(AppUser::getId, u -> u));
+
+        List<Prediction> predictions =
+                predictionRepository.findByLeagueIdOrderByUserIdAscMatchIdAsc(id);
+
+        Map<Long, MatchGame> matchesById = matchGameRepository.findAllById(
+                predictions.stream()
+                        .map(Prediction::getMatchId)
+                        .toList()
+        ).stream().collect(Collectors.toMap(MatchGame::getId, m -> m));
+
+        List<RankingRow> rankings = members.stream()
+                .map(member -> buildRankingRow(member, usersById, predictions, matchesById))
+                .sorted(java.util.Comparator
+                        .comparingInt(RankingRow::getPoints)
+                        .reversed()
+                        .thenComparing(java.util.Comparator.comparingInt(RankingRow::getExact4).reversed())
+                        .thenComparing(java.util.Comparator.comparingInt(RankingRow::getExact3).reversed())
+                        .thenComparing(java.util.Comparator.comparingInt(RankingRow::getResultCount).reversed())
+                        .thenComparing(RankingRow::getFullName))
+                .toList();
+
+        model.addAttribute("rankings", rankings);
+
+        League league = (League) model.getAttribute("league");
+
+        List<MatchGame> tournamentMatches =
+                matchGameRepository.findByTournamentIdOrderByKickoffAtAscMatchNoAsc(
+                        league.getTournamentId()
+                );
+
+        List<RankingPredictionMatrixRow> predictionMatrix =
+                buildPredictionMatrixRows(
+                        members,
+                        usersById,
+                        predictions,
+                        tournamentMatches,
+                        currentUserId(session),
+                        isAdmin(session)
+                );
+
+        model.addAttribute("predictionMatrix", predictionMatrix);
+
+        List<String> predictionMatrixPlayers = members.stream()
+                .map(m -> {
+                    AppUser user = usersById.get(m.getUserId());
+                    return user == null ? "User " + m.getUserId() : user.getFullName();
+                })
+                .toList();
+
+        model.addAttribute("predictionMatrixPlayers", predictionMatrixPlayers);
+
+        List<WinnerPrediction> winnerPredictions =
+                winnerPredictionRepository.findByLeagueIdOrderByTeamNameAsc(id);
+
+        List<WinnerPickRow> winnerPickRows = winnerPredictions.stream()
+                .map(w -> {
+                    AppUser user = usersById.get(w.getUserId());
+
+                    String fullName = user == null
+                            ? "User " + w.getUserId()
+                            : user.getFullName();
+
+                    return new WinnerPickRow(fullName, w.getTeamName());
+                })
+                .toList();
+
+        model.addAttribute("winnerPickRows", winnerPickRows);
+    }
+    
 }

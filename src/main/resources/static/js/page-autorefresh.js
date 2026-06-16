@@ -2,65 +2,55 @@
     "use strict";
 
     const refreshMs = 30000;
-    const storageKey = "predictor.scroll.position";
 
-    const path = window.location.pathname;
-
-    const shouldRefresh =
-        path.includes("/tournaments/") ||
-        path.includes("/leagues/");
-
-    if (!shouldRefresh) {
-        return;
+    function findRefreshTargets() {
+        return document.querySelectorAll("[data-ajax-refresh-url]");
     }
 
-    function getScrollContainer() {
-        return document.querySelector(".tournament-body")
-            || document.querySelector(".main-body")
-            || document.documentElement;
-    }
+    async function refreshTarget(target) {
+        const url = target.dataset.ajaxRefreshUrl;
 
-    function restoreScroll() {
-        const saved = sessionStorage.getItem(storageKey);
-
-        if (!saved) {
+        if (!url) {
             return;
         }
 
         try {
-            const state = JSON.parse(saved);
+            const response = await fetch(url, {
+                method: "GET",
+                cache: "no-store",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
 
-            if (state.path !== path) {
+            if (!response.ok) {
+                console.warn("AJAX refresh failed:", url, response.status);
                 return;
             }
 
-            const container = getScrollContainer();
-
-            setTimeout(function () {
-                container.scrollTop = state.scrollTop || 0;
-                container.scrollLeft = state.scrollLeft || 0;
-            }, 80);
+            target.innerHTML = await response.text();
 
         } catch (e) {
-            sessionStorage.removeItem(storageKey);
+            console.warn("AJAX refresh error:", url, e);
         }
     }
 
-    function saveScroll() {
-        const container = getScrollContainer();
+    function refreshAllTargets() {
+        const targets = findRefreshTargets();
 
-        sessionStorage.setItem(storageKey, JSON.stringify({
-            path: path,
-            scrollTop: container.scrollTop || 0,
-            scrollLeft: container.scrollLeft || 0
-        }));
+        if (!targets.length) {
+            return;
+        }
+
+        targets.forEach(refreshTarget);
     }
 
-    restoreScroll();
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!findRefreshTargets().length) {
+            return;
+        }
 
-    setTimeout(function () {
-        saveScroll();
-        window.location.reload();
-    }, refreshMs);
+        setInterval(refreshAllTargets, refreshMs);
+    });
 
 })();
