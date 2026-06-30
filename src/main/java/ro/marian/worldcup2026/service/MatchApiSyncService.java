@@ -147,6 +147,10 @@ public class MatchApiSyncService {
             changed = true;
         }
 
+        /*
+         * API raw fields
+         * Astea se pot actualiza oricand, inclusiv dupa validare manuala.
+         */
         if (!equalsInteger(match.getApiScoreA(), apiMatch.getHomeScore())) {
             match.setApiScoreA(apiMatch.getHomeScore());
             changed = true;
@@ -162,7 +166,21 @@ public class MatchApiSyncService {
             changed = true;
         }
 
-        if (apiMatch.getHomeScore() != null && apiMatch.getAwayScore() != null) {
+        /*
+         * Daca scorul oficial a fost validat manual,
+         * API-ul NU mai are voie sa suprascrie scoreA / scoreB.
+         *
+         * Important pentru knockout:
+         * API poate returna scor dupa extra-time / penalty shootout,
+         * dar regula predictorului este scorul dupa 90 minute.
+         */
+        boolean manuallyValidated =
+                "MANUAL".equalsIgnoreCase(match.getScoreSource())
+                        && "Y".equalsIgnoreCase(match.getScoreValidatedYn());
+
+        if (!manuallyValidated
+                && apiMatch.getHomeScore() != null
+                && apiMatch.getAwayScore() != null) {
 
             boolean officialChanged = false;
 
