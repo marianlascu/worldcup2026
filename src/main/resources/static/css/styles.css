@@ -3801,3 +3801,174 @@ thead .mx-sticky {
         white-space: normal;
     }
 }
+
+/* UCL KNOCKOUT (simulare, etapa 1) */
+.ucl-knockout {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: calc(100vh - 230px);
+    min-height: 520px;
+    overflow: hidden;
+}
+
+.ucl-banner {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 216, 107, 0.45);
+    background: rgba(255, 216, 107, 0.08);
+    color: #ffd86b;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.ucl-viewport {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr minmax(200px, 260px) 1fr;
+    gap: 12px;
+}
+
+.ucl-viewport > svg,
+.ucl-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.ucl-half {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 0;
+}
+
+.ucl-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.ucl-round-title {
+    flex: 0 0 auto;
+    text-align: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #ffd86b;
+    padding-bottom: 4px;
+}
+
+.ucl-column-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 4px;
+}
+
+.ucl-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+    min-height: 0;
+}
+
+.ucl-center-title {
+    text-align: center;
+    color: #ffd86b;
+    font-weight: 700;
+}
+
+.ucl-tie {
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    padding: 4px 6px;
+    background: linear-gradient(135deg, rgba(5, 15, 30, 0.92), rgba(10, 35, 65, 0.86));
+    border: 1px solid rgba(255, 216, 107, 0.34);
+    font-size: 0.72rem;
+    color: #f4f7fb;
+    min-width: 0;
+}
+
+.ucl-tie-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.62rem;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+.ucl-tag {
+    font-size: 0.56rem;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(255, 216, 107, 0.18);
+    color: #ffd86b;
+}
+
+.ucl-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ucl-team {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.ucl-logo,
+.ucl-logo-fallback {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    text-align: center;
+    line-height: 18px;
+}
+
+.ucl-team-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    color: #ffd86b;
+}
+
+.ucl-pos {
+    flex: 0 0 auto;
+    opacity: 0.6;
+}
+
+.ucl-placeholder {
+    font-size: 0.66rem;
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.ucl-vs {
+    font-size: 0.6rem;
+    opacity: 0.6;
+    text-align: center;
+}
+
+.ucl-center .ucl-tie {
+    padding: 8px;
+}

@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ro.marian.worldcup2026.dto.GroupStanding;
+import ro.marian.worldcup2026.dto.GroupStandingRow;
 import ro.marian.worldcup2026.dto.KnockoutMatchView;
 import ro.marian.worldcup2026.model.Tournament;
 import ro.marian.worldcup2026.repository.MatchGameRepository;
@@ -13,6 +15,7 @@ import ro.marian.worldcup2026.service.MatchScoreService;
 import ro.marian.worldcup2026.service.StandingService;
 import ro.marian.worldcup2026.service.MatchApiSyncService;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,16 @@ import java.util.Optional;
 
 @Controller
 public class TournamentsController {
+
+    private static final String UCL_CODE = "UCL2627";
+
+    /*
+     * Knockout bracket layout. Index k is the Round of 16 tie k+1.
+     * Top-8 seeds are placed on the left (1-4) and right (5-8) halves,
+     * each facing the Knockout Play-off winner fed by league position 9+k.
+     * Schematic only: verify against the UEFA bracket annex before relying on it.
+     */
+    private static final int[] UCL_R16_SEEDS = {1, 4, 2, 3, 5, 8, 6, 7};
 
     private final TournamentRepository tournamentRepository;
     private final MatchGameRepository matchGameRepository;
@@ -154,6 +167,11 @@ public class TournamentsController {
         String view = openTournamentTab(id, "knockout", session, model);
 
         if (!"tournaments/tournament-layout".equals(view)) {
+            return view;
+        }
+
+        if (UCL_CODE.equals(session.getAttribute("TOURNAMENT_CODE"))) {
+            addUclKnockoutModel(id, model);
             return view;
         }
 
@@ -328,6 +346,92 @@ public class TournamentsController {
         };
     }
 
+    private void addUclKnockoutModel(Long tournamentId, Model model) {
+        Map<Integer, GroupStandingRow> rowsByPosition = new HashMap<>();
+
+        standingService.buildGroupStandings(tournamentId).stream()
+                .filter(group -> "League".equalsIgnoreCase(group.getName()))
+                .findFirst()
+                .ifPresent(group -> group.getRows()
+                        .forEach(row -> rowsByPosition.put(row.getPosition(), row)));
+
+        List<UclTie> playoffs = new ArrayList<>();
+        for (int seed = 9; seed <= 16; seed++) {
+            int opponentTop = 23 - 2 * ((seed - 9) / 2);
+            playoffs.add(new UclTie(
+                    "po-" + seed,
+                    "r16-" + (seed - 8),
+                    "Baraj",
+                    new UclSide(null, List.of(uclCandidate(rowsByPosition, seed))),
+                    new UclSide(null, List.of(
+                            uclCandidate(rowsByPosition, opponentTop),
+                            uclCandidate(rowsByPosition, opponentTop + 1))),
+                    true));
+        }
+
+        List<UclTie> roundOf16 = new ArrayList<>();
+        for (int k = 0; k < UCL_R16_SEEDS.length; k++) {
+            roundOf16.add(new UclTie(
+                    "r16-" + (k + 1),
+                    "qf-" + (k / 2 + 1),
+                    "Optimi",
+                    new UclSide(null, List.of(uclCandidate(rowsByPosition, UCL_R16_SEEDS[k]))),
+                    new UclSide("Câștigător baraj", List.of()),
+                    true));
+        }
+
+        List<UclTie> quarterFinals = new ArrayList<>();
+        for (int k = 0; k < 4; k++) {
+            quarterFinals.add(new UclTie(
+                    "qf-" + (k + 1),
+                    "sf-" + (k / 2 + 1),
+                    "Sferturi",
+                    new UclSide("Câștigător optimi", List.of()),
+                    new UclSide("Câștigător optimi", List.of()),
+                    false));
+        }
+
+        List<UclTie> semiFinals = new ArrayList<>();
+        for (int k = 0; k < 2; k++) {
+            semiFinals.add(new UclTie(
+                    "sf-" + (k + 1),
+                    "final",
+                    "Semifinală",
+                    new UclSide("Câștigător sferturi", List.of()),
+                    new UclSide("Câștigător sferturi", List.of()),
+                    false));
+        }
+
+        UclTie finalTie = new UclTie(
+                "final",
+                null,
+                "Finală",
+                new UclSide("Câștigător semifinală", List.of()),
+                new UclSide("Câștigător semifinală", List.of()),
+                false);
+
+        model.addAttribute("uclMode", true);
+        model.addAttribute("uclPlayoffLeft", playoffs.subList(0, 4));
+        model.addAttribute("uclPlayoffRight", playoffs.subList(4, 8));
+        model.addAttribute("uclRoundOf16Left", roundOf16.subList(0, 4));
+        model.addAttribute("uclRoundOf16Right", roundOf16.subList(4, 8));
+        model.addAttribute("uclQuarterFinalLeft", quarterFinals.subList(0, 2));
+        model.addAttribute("uclQuarterFinalRight", quarterFinals.subList(2, 4));
+        model.addAttribute("uclSemiFinalLeft", semiFinals.subList(0, 1));
+        model.addAttribute("uclSemiFinalRight", semiFinals.subList(1, 2));
+        model.addAttribute("uclFinal", finalTie);
+    }
+
+    private UclCandidate uclCandidate(Map<Integer, GroupStandingRow> rowsByPosition, int position) {
+        GroupStandingRow row = rowsByPosition.get(position);
+
+        if (row == null) {
+            return new UclCandidate(position, null, null);
+        }
+
+        return new UclCandidate(position, row.getTeamName(), row.getLogoUrl());
+    }
+
     private boolean stageIs(String stage, String expected) {
         return stage != null && stage.equalsIgnoreCase(expected);
     }
@@ -355,5 +459,15 @@ public class TournamentsController {
                         m -> positions.getOrDefault(m.getMatchNo(), 9999)
                 ))
                 .toList();
+    }
+
+    private record UclCandidate(int position, String teamName, String logoUrl) {
+    }
+
+    private record UclSide(String placeholder, List<UclCandidate> candidates) {
+    }
+
+    private record UclTie(String id, String nextId, String label,
+                          UclSide top, UclSide bottom, boolean provisional) {
     }
 }

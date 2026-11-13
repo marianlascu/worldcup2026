@@ -4,7 +4,98 @@
 
 <div th:fragment="content">
 
-    <div class="ko-bracket ko-bracket-slots">
+    <div th:if="${uclMode}" class="ucl-knockout">
+
+        <div class="ucl-banner">
+            SIMULARE · proiecție provizorie pe baza clasamentului curent. Tragerea la sorți nu a avut loc; nu sunt calificări confirmate.
+        </div>
+
+        <div class="ucl-viewport" id="ucl-bracket">
+
+            <div class="ucl-half ucl-half-left">
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Baraj</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclPlayoffLeft}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Optimi</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclRoundOf16Left}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Sferturi</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclQuarterFinalLeft}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Semifinale</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclSemiFinalLeft}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ucl-center">
+                <div class="ucl-center-title">🏆 Finală</div>
+                <th:block th:if="${uclFinal != null}">
+                    <div th:replace="::uclTie(${uclFinal})"></div>
+                </th:block>
+            </div>
+
+            <div class="ucl-half ucl-half-right">
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Semifinale</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclSemiFinalRight}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Sferturi</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclQuarterFinalRight}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Optimi</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclRoundOf16Right}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="ucl-column">
+                    <div class="ucl-round-title">Baraj</div>
+                    <div class="ucl-column-body">
+                        <th:block th:each="t : ${uclPlayoffRight}">
+                            <div th:replace="::uclTie(${t})"></div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script th:src="@{/js/ucl-knockout-bracket.js}"></script>
+    </div>
+
+    <div class="ko-bracket ko-bracket-slots" th:unless="${uclMode}">
+
 
         <!-- LEFT: R32 -> R16 -> QF -> SF -->
         <div class="ko-side ko-left">
@@ -185,6 +276,29 @@
 
     </div>
 
+</div>
+
+<div th:fragment="uclSide(side)" class="ucl-slot">
+    <span th:if="${side.candidates().isEmpty()}" class="ucl-placeholder" th:text="${side.placeholder()}">Câștigător</span>
+    <div class="ucl-team" th:each="c : ${side.candidates()}">
+        <img th:if="${c.logoUrl() != null and !c.logoUrl().isBlank()}"
+             th:src="${c.logoUrl()}" th:alt="${c.teamName()}" class="ucl-logo">
+        <span th:unless="${c.logoUrl() != null and !c.logoUrl().isBlank()}" class="ucl-logo-fallback">⚽</span>
+        <span th:if="${c.teamName() != null}" class="ucl-team-name" th:text="${c.teamName()}">Echipă</span>
+        <span th:unless="${c.teamName() != null}" class="ucl-placeholder" th:text="'Locul ' + ${c.position()}">Locul</span>
+        <span th:if="${c.teamName() != null}" class="ucl-pos" th:text="${c.position()}">1</span>
+    </div>
+</div>
+
+<div th:fragment="uclTie(t)" class="ucl-tie"
+     th:attr="data-id=${t.id()},data-next=${t.nextId()}">
+    <div class="ucl-tie-head">
+        <span th:text="${t.label()}">Baraj</span>
+        <span th:if="${t.provisional()}" class="ucl-tag">PROVIZORIU</span>
+    </div>
+    <div th:replace="::uclSide(${t.top()})"></div>
+    <div class="ucl-vs">vs</div>
+    <div th:replace="::uclSide(${t.bottom()})"></div>
 </div>
 
 </body>
