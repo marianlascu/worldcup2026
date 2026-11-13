@@ -31,7 +31,8 @@ public class FootballDataClient {
         this.httpClient = HttpClient.newHttpClient();
     }
 
-    public List<FootballDataMatchDto> fetchCompetitionMatches() {
+    public List<FootballDataMatchDto> fetchCompetitionMatches(String competitionCode,
+                                                              Integer season) {
 
         if (!properties.isEnabled()) {
             return List.of();
@@ -41,13 +42,19 @@ public class FootballDataClient {
             throw new IllegalStateException("football-data.api-token is missing");
         }
 
-        String url = properties.getBaseUrl()
-                + "/competitions/"
-                + properties.getCompetitionCode()
-                + "/matches";
+        StringBuilder url = new StringBuilder(
+                properties.getBaseUrl()
+                        + "/competitions/"
+                        + competitionCode
+                        + "/matches"
+        );
+
+        if (season != null) {
+            url.append("?season=").append(season);
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(url.toString()))
                 .header("X-Auth-Token", properties.getApiToken())
                 .header("Accept", "application/json")
                 .GET()
@@ -79,6 +86,7 @@ public class FootballDataClient {
     }
 
     private List<FootballDataMatchDto> parseMatches(String json) throws IOException {
+
         JsonNode root = objectMapper.readTree(json);
         JsonNode matchesNode = root.path("matches");
 
@@ -89,20 +97,55 @@ public class FootballDataClient {
         }
 
         for (JsonNode m : matchesNode) {
+
             FootballDataMatchDto dto = new FootballDataMatchDto();
 
-            dto.setExternalId(readLong(m, "id"));
-            dto.setStatus(readText(m, "status"));
+            dto.setExternalId(
+                    readLong(m, "id")
+            );
 
-            dto.setUtcKickoffAt(parseUtcDateTime(readText(m, "utcDate")));
+            dto.setStatus(
+                    readText(m, "status")
+            );
 
-            dto.setHomeTeamName(m.path("homeTeam").path("name").asText(null));
-            dto.setAwayTeamName(m.path("awayTeam").path("name").asText(null));
+            dto.setUtcKickoffAt(
+                    parseUtcDateTime(
+                            readText(m, "utcDate")
+                    )
+            );
 
-            JsonNode fullTime = m.path("score").path("fullTime");
+            JsonNode homeTeam =
+                    m.path("homeTeam");
 
-            dto.setHomeScore(readInteger(fullTime, "home"));
-            dto.setAwayScore(readInteger(fullTime, "away"));
+            JsonNode awayTeam =
+                    m.path("awayTeam");
+
+            dto.setHomeTeamName(
+                    homeTeam.path("name").asText(null)
+            );
+
+            dto.setAwayTeamName(
+                    awayTeam.path("name").asText(null)
+            );
+
+            dto.setHomeTeamCrest(
+                    homeTeam.path("crest").asText(null)
+            );
+
+            dto.setAwayTeamCrest(
+                    awayTeam.path("crest").asText(null)
+            );
+
+            JsonNode fullTime =
+                    m.path("score").path("fullTime");
+
+            dto.setHomeScore(
+                    readInteger(fullTime, "home")
+            );
+
+            dto.setAwayScore(
+                    readInteger(fullTime, "away")
+            );
 
             result.add(dto);
         }

@@ -12,7 +12,7 @@ public class MatchGame {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "match_no", unique = true)
+    @Column(name = "match_no")
     private Integer matchNo;
 
     @Column(name = "stage")
@@ -26,6 +26,12 @@ public class MatchGame {
 
     @Column(name = "team_b")
     private String teamB;
+
+    @Column(name = "team_a_logo")
+    private String teamALogo;
+
+    @Column(name = "team_b_logo")
+    private String teamBLogo;
 
     @Column(name = "kickoff_at")
     private LocalDateTime kickoffAt;
@@ -55,9 +61,12 @@ public class MatchGame {
     private Long tournamentId;
 
     /* =========================================================
-       API SCORE
+       API DATA
        Imported from external provider
        ========================================================= */
+
+    @Column(name = "api_match_id")
+    private Long apiMatchId;
 
     @Column(name = "api_score_a")
     private Integer apiScoreA;
@@ -103,9 +112,6 @@ public class MatchGame {
 
     @Column(name = "score_validated_by")
     private String scoreValidatedBy;
-    
-    @Column(name = "api_match_id")
-    private Long apiMatchId;    
 
     /* =========================================================
        GETTERS / SETTERS
@@ -155,6 +161,22 @@ public class MatchGame {
         this.teamB = teamB;
     }
 
+    public String getTeamALogo() {
+        return teamALogo;
+    }
+
+    public void setTeamALogo(String teamALogo) {
+        this.teamALogo = teamALogo;
+    }
+
+    public String getTeamBLogo() {
+        return teamBLogo;
+    }
+
+    public void setTeamBLogo(String teamBLogo) {
+        this.teamBLogo = teamBLogo;
+    }
+
     public LocalDateTime getKickoffAt() {
         return kickoffAt;
     }
@@ -201,6 +223,14 @@ public class MatchGame {
 
     public void setTournamentId(Long tournamentId) {
         this.tournamentId = tournamentId;
+    }
+
+    public Long getApiMatchId() {
+        return apiMatchId;
+    }
+
+    public void setApiMatchId(Long apiMatchId) {
+        this.apiMatchId = apiMatchId;
     }
 
     public Integer getApiScoreA() {
@@ -297,13 +327,5 @@ public class MatchGame {
 
     public void setScoreValidatedBy(String scoreValidatedBy) {
         this.scoreValidatedBy = scoreValidatedBy;
-    }
-    
-    public Long getApiMatchId() {
-    return apiMatchId;
-}
-
-    public void setApiMatchId(Long apiMatchId) {
-        this.apiMatchId = apiMatchId;
     }
 }

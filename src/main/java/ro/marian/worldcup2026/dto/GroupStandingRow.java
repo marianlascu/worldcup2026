@@ -3,8 +3,10 @@ package ro.marian.worldcup2026.dto;
 public class GroupStandingRow {
 
     private int position;
+
     private String teamName;
     private String flagEmoji;
+    private String logoUrl;
 
     private int played;
     private int wins;
@@ -19,52 +21,124 @@ public class GroupStandingRow {
         this.teamName = teamName;
     }
 
-    public int getPosition() { return position; }
-    public void setPosition(int position) { this.position = position; }
+    public int getPosition() {
+        return position;
+    }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
-    public String getFlagEmoji() { return flagEmoji; }
-    public void setFlagEmoji(String flagEmoji) { this.flagEmoji = flagEmoji; }
+    public String getTeamName() {
+        return teamName;
+    }
 
-    public int getPlayed() { return played; }
-    public void setPlayed(int played) { this.played = played; }
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
 
-    public int getWins() { return wins; }
-    public void setWins(int wins) { this.wins = wins; }
+    public String getFlagEmoji() {
+        return flagEmoji;
+    }
 
-    public int getDraws() { return draws; }
-    public void setDraws(int draws) { this.draws = draws; }
+    public void setFlagEmoji(String flagEmoji) {
+        this.flagEmoji = flagEmoji;
+    }
 
-    public int getLosses() { return losses; }
-    public void setLosses(int losses) { this.losses = losses; }
+    public String getLogoUrl() {
+        return logoUrl;
+    }
 
-    public int getGoalsScored() { return goalsScored; }
-    public void setGoalsScored(int goalsScored) { this.goalsScored = goalsScored; }
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
 
-    public int getGoalsAgainst() { return goalsAgainst; }
-    public void setGoalsAgainst(int goalsAgainst) { this.goalsAgainst = goalsAgainst; }
+    public int getPlayed() {
+        return played;
+    }
 
-    public int getGoalsDiff() { return goalsDiff; }
-    public void setGoalsDiff(int goalsDiff) { this.goalsDiff = goalsDiff; }
+    public void setPlayed(int played) {
+        this.played = played;
+    }
 
-    public int getPoints() { return points; }
-    public void setPoints(int points) { this.points = points; }
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public void setDraws(int draws) {
+        this.draws = draws;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public int getGoalsScored() {
+        return goalsScored;
+    }
+
+    public void setGoalsScored(int goalsScored) {
+        this.goalsScored = goalsScored;
+    }
+
+    public int getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public void setGoalsAgainst(int goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
+    }
+
+    public int getGoalsDiff() {
+        return goalsDiff;
+    }
+
+    public void setGoalsDiff(int goalsDiff) {
+        this.goalsDiff = goalsDiff;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     public void addMatch(int gf, int ga) {
+
         played++;
+
         goalsScored += gf;
         goalsAgainst += ga;
-        goalsDiff = goalsScored - goalsAgainst;
+
+        goalsDiff =
+                goalsScored - goalsAgainst;
 
         if (gf > ga) {
+
             wins++;
             points += 3;
+
         } else if (gf == ga) {
+
             draws++;
             points += 1;
+
         } else {
+
             losses++;
         }
     }

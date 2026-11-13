@@ -15,6 +15,9 @@ public class FootballDataMatchDto {
     private Integer homeScore;
     private Integer awayScore;
 
+    private String homeTeamCrest;
+    private String awayTeamCrest;
+
     public FootballDataMatchDto() {
     }
 
@@ -72,5 +75,21 @@ public class FootballDataMatchDto {
 
     public void setAwayScore(Integer awayScore) {
         this.awayScore = awayScore;
+    }
+
+    public String getHomeTeamCrest() {
+        return homeTeamCrest;
+    }
+
+    public void setHomeTeamCrest(String homeTeamCrest) {
+        this.homeTeamCrest = homeTeamCrest;
+    }
+
+    public String getAwayTeamCrest() {
+        return awayTeamCrest;
+    }
+
+    public void setAwayTeamCrest(String awayTeamCrest) {
+        this.awayTeamCrest = awayTeamCrest;
     }
 }

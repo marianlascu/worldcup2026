@@ -4,11 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title th:text="'Sport Predictor - ' + ${selectedTournament.name}">
         Sport Predictor - Tournament
     </title>
+
     <link rel="stylesheet" href="/css/styles.css">
-    <<link rel="manifest" href="/json/manifest.json">
+
+    <link rel="manifest" href="/json/manifest.json">
 
     <meta name="theme-color" content="#111111">
 
@@ -16,8 +19,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Sport Predictor">
 
-    <link rel="apple-touch-icon" href="/img/app-icon-192.png">  
-    <link rel="icon" type="image/x-icon" th:href="@{/img/app-icon-192.png}"
+    <link rel="apple-touch-icon" href="/img/app-icon-192.png">
+
+    <link rel="icon"
+          type="image/x-icon"
+          th:href="@{/img/app-icon-192.png}">
 </head>
 
 <body>
@@ -30,7 +36,11 @@
 
     <div th:fragment="content">
 
-        <section th:fragment="content" class="card tournament-shell">
+        <section th:fragment="content"
+                 class="card tournament-shell"
+                 th:style="${pageBgImage != null and !pageBgImage.isBlank()}
+                     ? 'background-image: url(' + ${pageBgImage} + ');'
+                     : ''">
 
             <div class="tournament-freeze">
 
@@ -38,7 +48,8 @@
 
                 </div>
 
-                <div th:replace="~{fragments/tournament-tabs :: tournamentTabs(${activeTab})}"></div>
+                <div th:replace="~{fragments/tournament-tabs :: tournamentTabs(${activeTab})}">
+                </div>
 
             </div>
 

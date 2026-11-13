@@ -3679,3 +3679,125 @@ thead .mx-sticky {
 .matrix-popup-player-row.pred-0 strong {
     color:#fca5a5;   /* roșu */
 }
+
+.playoff-row {
+    background: rgba(255, 193, 7, 0.12);
+}
+
+.eliminated-row {
+    opacity: 0.72;
+}
+
+.league-card {
+    width: 100%;
+}
+
+.league-table {
+    width: 100%;
+}
+
+.team-logo-small {
+    width: 22px !important;
+    height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+    object-fit: contain;
+    flex: 0 0 22px;
+}
+
+.tournament-shell {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* =========================================================
+   PLAYERS
+   ========================================================= */
+
+.players-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.players-header {
+    margin-bottom: 16px;
+}
+
+.players-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.players-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.players-table th,
+.players-table td {
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.players-actions {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PLAYERS - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .players-table-wrap {
+        overflow: visible;
+    }
+
+    .players-table,
+    .players-table thead,
+    .players-table tbody,
+    .players-table tr,
+    .players-table th,
+    .players-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .players-table thead {
+        display: none;
+    }
+
+    .players-table tr {
+        margin-bottom: 12px;
+        padding: 10px 12px;
+
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    .players-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+
+        padding: 7px 0;
+        border: 0;
+        box-sizing: border-box;
+    }
+
+    .players-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        opacity: 0.75;
+        flex: 0 0 92px;
+    }
+
+    .players-actions {
+        white-space: normal;
+    }
+}

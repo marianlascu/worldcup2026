@@ -605,6 +605,14 @@ public String leagueRankings(@PathVariable Long id,
     addUserInfo(session, model);
 
     model.addAttribute("league", league);
+    Tournament tournament = tournamentRepository
+            .findById(league.getTournamentId())
+            .orElse(null);
+
+    model.addAttribute(
+            "pageBgImage",
+            tournament == null ? null : tournament.getBgImage()
+    );    
     model.addAttribute(
             "livePanel",
             tournamentLivePanelService.build(league.getTournamentId())

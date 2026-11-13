@@ -6,13 +6,19 @@
 
     <div class="groups-grid">
 
-        <div class="group-card" th:each="group : ${groups}">
+        <div class="group-card"
+             th:each="group : ${groups}"
+             th:classappend="${group.name == 'League'} ? ' league-card' : ''">
 
             <div class="group-title">
-                <span th:text="${group.name}">Group A</span>
+                <span th:text="${group.name == 'League' ? 'League Phase' : group.name}">
+                    Group A
+                </span>
             </div>
 
-            <table class="group-table">
+            <table class="group-table"
+                   th:classappend="${group.name == 'League'} ? ' league-table' : ''">
+
                 <thead>
                 <tr>
                     <th>Loc</th>
@@ -29,22 +35,58 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="row : ${group.rows}"
-                    th:class="${row.position <= 2} ? 'qualified-row' : 'normal-row'">
 
-                    <td class="pos-cell" th:text="${row.position}">1</td>
+                <tr th:each="row : ${group.rows}"
+
+                    th:class="
+                        ${group.name == 'League'}
+                            ?
+                                (${row.position <= 8}
+                                    ? 'qualified-row'
+                                    : (${row.position <= 24}
+                                        ? 'playoff-row'
+                                        : 'eliminated-row'))
+                            :
+                                (${row.position <= 2}
+                                    ? 'qualified-row'
+                                    : 'normal-row')
+                    ">
+
+                    <td class="pos-cell"
+                        th:text="${row.position}">
+                        1
+                    </td>
 
                     <td class="team-cell">
-                        <span class="team-flag-small"
-                              th:text="${row.flagEmoji}">
-                            🇲🇽
-                        </span>
 
-                        <span class="team-name-table"
-                              th:text="${row.teamName}">
-                            Mexico
-                        </span>
-                    </td>
+                        <img th:if="${row.logoUrl != null and !row.logoUrl.isBlank()}"
+                             th:src="${row.logoUrl}"
+                             th:alt="${row.teamName}"
+                             class="team-logo-small"
+                             style="
+                                 width: 22px !important;
+                                 height: 22px !important;
+                                 min-width: 22px !important;
+                                 min-height: 22px !important;
+                                 max-width: 22px !important;
+                                 max-height: 22px !important;
+                                 object-fit: contain !important;
+                                 display: block !important;
+                                 flex: 0 0 22px !important;
+                             ">
+
+                      <span th:unless="${row.logoUrl != null and !row.logoUrl.isBlank()}"
+                            class="team-flag-small"
+                            th:text="${row.flagEmoji}">
+                          ⚽
+                      </span>
+
+                      <span class="team-name-table"
+                            th:text="${row.teamName}">
+                          Team
+                      </span>
+
+                  </td>
 
                     <td th:text="${row.played}">0</td>
                     <td th:text="${row.wins}">0</td>
@@ -53,10 +95,16 @@
                     <td th:text="${row.goalsScored}">0</td>
                     <td th:text="${row.goalsAgainst}">0</td>
                     <td th:text="${row.goalsDiff}">0</td>
-                    <td class="points" th:text="${row.points}">0</td>
+
+                    <td class="points"
+                        th:text="${row.points}">
+                        0
+                    </td>
 
                 </tr>
+
                 </tbody>
+
             </table>
 
         </div>

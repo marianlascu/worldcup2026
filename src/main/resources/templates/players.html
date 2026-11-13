@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>World Cup 2026 - Players</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sport Predictor - Players</title>
+
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
@@ -17,31 +20,59 @@
 
     <div th:fragment="content">
 
-        <section class="card">
-            <h2>Players CRUD</h2>
+        <section class="card players-card">
 
-            <p>
-                Aici vom gestiona participanții: add, update, delete.
-            </p>
+            <div class="players-header">
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Full name</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>marian</td>
-                    <td>Marian</td>
-                    <td>PLAYER</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                </tbody>
-            </table>
+                <div>
+                    <h2>Players CRUD</h2>
+
+                    <p>
+                        Aici vom gestiona participanții: add, update, delete.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="players-table-wrap">
+
+                <table class="players-table">
+
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full name</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr>
+                        <td data-label="Username">
+                            marian
+                        </td>
+
+                        <td data-label="Full name">
+                            Marian
+                        </td>
+
+                        <td data-label="Role">
+                            PLAYER
+                        </td>
+
+                        <td data-label="Actions"
+                            class="players-actions">
+                            Edit | Delete
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </section>
 
